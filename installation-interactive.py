@@ -16,7 +16,7 @@ file = "/etc/dhcp/"+nom
 mdp_root = 'password'
 nom_user = 'julian'
 mdp_user = 'password'
-taille_swap = '1024'
+taille_swap = '2048'
 
 
 # On vérifie que l'adresse MAC en soit bien une
@@ -43,6 +43,9 @@ elif os == 'centos':
 elif os == 'freebsd':
 	fichierspxe.pxefreebsd(mac)
 	configinstall.freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user)
+elif os == 'ubuntu2':
+	fichierspxe.pxeubuntu(mac)
+	configinstall.ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap)
 else:
 	print('OS non supporté. Quitte le script')
-	sys.exit
+	sys.exit()
