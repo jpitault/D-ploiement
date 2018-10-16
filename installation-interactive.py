@@ -16,7 +16,7 @@ file = "/etc/dhcp/"+nom
 mdp_root = 'password'
 nom_user = 'julian'
 mdp_user = 'password'
-taille_swap = '2048'
+taille_swap = '1024'
 
 
 # On vérifie que l'adresse MAC en soit bien une

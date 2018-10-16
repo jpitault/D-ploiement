@@ -90,7 +90,7 @@ def ubuntupreseed(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('tasksel tasksel/first multiselect standard, ssh-server \n')
 		fichier.write('d-i grub-installer/only_debian boolean true \n')
 		fichier.write('d-i grub-installer/with_other_os boolean true \n')
-		fichier.write('d-i grub-installer/bootdev  string /dev/sda \n')
+		fichier.write('d-i grub-installer/bootdev  string /dev/sda /dev/sdb\n')
 		fichier.write('d-i finish-install/reboot_in_progress note \n')
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh \n')
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/agregatubuntu.sh http://192.168.0.254/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh \n')
