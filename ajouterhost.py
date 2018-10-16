@@ -4,7 +4,8 @@ import subprocess
 import re
 
 
-def ajouterhost(mac, os, ip, nom, file):
+def ajouterhost(mac, os, ip, nom):
+	file = "/etc/dhcp/"+nom
 
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
