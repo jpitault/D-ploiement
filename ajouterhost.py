@@ -29,7 +29,10 @@ def ajouterhost(mac, os, ip, nom):
 		fichier.write("host {} ".format(nom))
 		fichier.write("{\n")
 		fichier.write("  hardware ethernet {};\n".format(mac))
-		fichier.write('  filename "{}/pxelinux.0";\n'.format(os))
+		if os == 'openbsd':
+			fichier.write('  filename "{}/auto_install";\n'.format(os))
+		else:
+			fichier.write('  filename "{}/pxelinux.0";\n'.format(os))
 		fichier.write('  fixed-address {};\n'.format(ip))
 		fichier.write('  option host-name "{}";'.format(nom))
 		fichier.write('\n}')
