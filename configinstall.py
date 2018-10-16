@@ -16,7 +16,7 @@ def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 
 
 
-	# On veut une adresse MAC en majuscule, séparée par ":"
+	# On veut une adresse MAC en minuscule, séparée par ":"
 	# On commence par séparer l'adresse MAC dans une list
 	listmac = re.findall('[a-fA-F0-9]{2}',mac)
 	# Puis on remet en string, séparée par ":"
