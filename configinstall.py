@@ -291,3 +291,26 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i finish-install/reboot_in_progress note \n')
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh \n')
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/agregatubuntu.sh http://192.168.0.254/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh \n')
+
+		
+def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
+
+	# On prend le fichier debian
+	debian(mac, mdp_root, nom_user, mdp_user, taille_swap)
+	
+	# Et on y ajoute le script proxmox en postinstall qui est sur notre serveur web
+	script = 'proxmoxinstall.sh'
+	
+	# variables
+	# On veut une adresse MAC en minuscule, séparée par "-"
+	# On commence par séparer l'adresse MAC dans une list
+	listmac = re.findall('[a-fA-F0-9]{2}',mac)
+	# Puis on remet en string, séparée par ":"
+	mac = "-".join(listmac)
+	# On met en minuscule
+	mac = mac.lower()
+
+	nom_preseed = '/var/www/html/' + mac + "debian.cfg"
+	
+	with open(nom_preseed,'a') as fichier:
+		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/{} http://192.168.0.254/{}; in-target /bin/bash /tmp/{} \n'.format(script, script, script))

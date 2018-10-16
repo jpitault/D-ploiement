@@ -63,7 +63,7 @@ def pxedebian(mac):
 
 
 	# Créer le fichier
-	with open(file, "a") as fichier:
+	with open(file, "w") as fichier:
 		fichier.write("default debian\nprompt 0\ntimeout 30\n\nlabel debian\n  kernel linux\n  append auto=true priority=critical initrd=initrd.gz netcfg/choose_interface=auto preseed/url=http://")
 		fichier.write(server)
 		fichier.write("/")
