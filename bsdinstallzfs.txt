@@ -1,0 +1,206 @@
+############################
+#variables
+############################
+
+
+POOL="data"
+DEVS="/dev/ada0 /dev/ada1"
+SWAP=1G
+URL="http://ftp.fr.freebsd.org/pub/FreeBSD/releases/amd64/11.2-RELEASE"
+EXTRACT_FILES="/tmp/base.txz /tmp/kernel.txz"
+MNT=/mnt
+ALTROOT="-o altroot=${MNT} -o cachefile=/boot/zfs/zpool.cache"
+ROOTMNT=/
+FS_LIST="var tmp"
+PRIMARY_NIC=em0
+SECONDART_NIC=em1
+LAGG_NIC=lagg0
+LAGG_NETWORK=DHCP
+#LAGG_NETWORK="192.168.0.10/24"
+#LAGG_CONF="lacp"
+LAGG_CONF="failover"
+NAME="CastleIT"
+POSTINSTALL="postinstall.sh"
+MDPROOT="insecure"
+USER="username"
+MDPUSER="insecure"
+
+############################
+#Fait le menage
+############################
+zpool destroy -f ${POOL}
+
+for DEV in ${DEVS}; do
+	gpart destroy -F ${DEV}
+done
+
+EXPOOLS=`/sbin/zpool import 2> /dev/null | /usr/bin/grep pool: | /usr/bin/awk '{ print $2 }'`
+
+if [ -n "${EXPOOLS}" ]; then
+	for P in ${EXPOOLS}; do
+		if [ "$P" = "$POOL" ]; then
+		POOL="${POOL}1"
+
+		fi
+	done
+fi
+
+############################
+#Telecharge
+############################
+
+fetch -o /tmp/base.txz "${URL}/base.txz"
+fetch -o /tmp/kernel.txz "${URL}/kernel.txz"
+
+############################
+#Partitionnement
+############################
+kldload zfs
+
+counter=0
+for DEV in ${DEVS}; do
+	gpart create -s GPT /dev/${DEV}
+	
+	# premiere slice active
+	echo "a 1" | fdisk -f - ${DEV}
+	
+	gpart add -t freebsd-boot -b 40 -s 472 ${DEV}
+	
+	gpart add -t freebsd-swap -l swap$counter -s "${SWAP}" ${DEV}
+	
+	gpart add -t freebsd-zfs ${DEV}
+	
+	dd if=/dev/zero of=${DEV}p2 bs=512 count=560
+	
+	dd if=/dev/zero of=${DEV}p3 bs=512 count=560
+	
+	gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 ${DEV}
+	
+	gpart show ${DEV}
+	
+	counter=$((counter+1))
+done
+
+
+############################
+#Zpool et zfs
+############################
+
+for DEV in ${DEVS}; do
+	PART=`/sbin/gpart show ${DEV} | /usr/bin/grep freebsd-zfs | /usr/bin/awk '{ print $3 }'`
+		
+	GPART=`/sbin/glabel list ${DEV}p${PART} | /usr/bin/grep gptid | /usr/bin/awk -F"gptid/" '{ print "gptid/" $2 }'`
+
+	GPARTS="${GPARTS} ${GPART}"
+	PARTS="${PARTS} ${DEV}p${PART}"
+done
+
+
+zpool create -f -m none ${ALTROOT} ${POOL} mirror ${PARTS}
+
+zfs set checksum=fletcher4 ${POOL}
+
+zfs create -o mountpoint=${ROOTMNT} ${POOL}/root
+
+
+for FS in ${FS_LIST}; do
+	zfs create ${MNTPT} ${POOL}/root/${FS}
+	echo -n " ${FS}"
+done
+
+zpool set bootfs=${POOL}/root ${POOL}
+
+zfs list -r ${POOL}
+
+
+############################
+#Extrait distrib
+############################
+
+for file in ${EXTRACT_FILES}; do
+	tar -C ${MNT} -x -f ${file}
+done
+
+
+############################
+#Change config
+############################
+
+echo "zfs_load=\"YES\"" > ${MNT}/boot/loader.conf
+echo "geom_mirror_load=\"YES\"" >> ${MNT}/boot/loader.conf
+echo "vfs.root.mountfrom=\"zfs:${POOL}/root\"" >> ${MNT}/boot/loader.conf
+
+kldload geom_mirror
+rm -f ${MNT}/etc/fstab
+touch ${MNT}/etc/fstab
+
+gmirror label -b prefer swap gpt/swap0 gpt/swap1
+
+echo "/dev/mirror/swap none swap sw 0 0" > ${MNT}/etc/fstab
+
+echo 'zfs_enable="YES"' >> $MNT/etc/rc.conf
+
+
+##############################
+#Parametres perso
+##############################
+echo 'if_lagg_load=YES' >> ${MNT}/boot/loader.conf
+echo "ifconfig_${PRIMARY_NIC}=up" >> ${MNT}/etc/rc.conf
+echo "ifconfig_${SECONDART_NIC}=up" >> ${MNT}/etc/rc.conf
+echo "cloned_interfaces=${LAGG_NIC}" >> ${MNT}/etc/rc.conf
+echo "ifconfig_${LAGG_NIC}=\"laggproto ${LAGG_CONF} laggport ${PRIMARY_NIC} laggport ${SECONDART_NIC} ${LAGG_NETWORK}\"" >> ${MNT}/etc/rc.conf
+
+
+echo 'keymap=fr.kbd' >> ${MNT}/etc/rc.conf
+echo 'sshd_enable=YES' >> ${MNT}/etc/rc.conf
+echo "hostname=${NAME}" >> ${MNT}/etc/rc.conf
+echo 'Ceci est un test' >> ${MNT}/etc/motd
+
+
+
+##############################
+#Copie /boot/zfs/zpool.cache
+##############################
+
+#for FS in ${FS_LIST}; do
+#	umount ${MNT}/${FS}
+#done
+
+#umount ${MNT}
+
+zpool export ${POOL}
+
+zpool import ${ALTROOT} ${POOL}
+
+#mount -t zfs ${POOL}/root ${MNT}
+cp /boot/zfs/zpool.cache ${MNT}/boot/zfs/
+
+
+##############################
+#postinstallmieux?
+##############################
+
+cp /etc/resolv.conf ${MNT}/etc/resolv.conf
+
+fetch -o ${MNT}/tmp/installscript http://192.168.0.254/"${POSTINSTALL}"
+
+chmod a+x ${MNT}/tmp/installscript
+
+mount -t devfs devfs "${MNT}/dev"
+
+chroot ${MNT} /tmp/installscript $@ 2>&1
+
+cat << EOF | chroot ${MNT} /bin/sh
+echo "${MDPROOT}" | pw usermod root -h 0
+echo "${MDPUSER}" | pw useradd -h 0 -n ${USER} -m
+EOF
+
+umount "${MNT}/dev"
+
+rm ${MNT}/tmp/installscript
+
+
+##############################
+#Reboot
+##############################
+reboot
