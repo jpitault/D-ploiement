@@ -18,6 +18,19 @@ class host(object):
 	#	# On affiche le fichier xml
 	#	resp.body = contents
 		
+	# Get affiche tous les fichiers xml présents dans le dossier
+	def on_get(self, req, resp):
+		resp.status = falcon.HTTP_200
+		#allfiles = ['red', 'blue']
+		mbody = ''
+		for file in os.listdir(self._storage_path):
+			name = os.path.join(self._storage_path, file)
+			with open(name, 'r') as fichier:
+				contents = fichier.read()
+				mbody = mbody + name + '\n' + contents 
+		#	allfiles.append(contents)
+		resp.body = mbody
+		
 	# Gère les requêtes post	
 	def on_post(self, req, resp):
 		resp.status = falcon.HTTP_201
