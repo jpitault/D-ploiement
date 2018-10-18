@@ -5,7 +5,18 @@ import installationxml as ix
 import suppressionhote as suph
 import xml.etree.ElementTree as ET
 
+ALLOWED_FILE_TYPE = (
+	'application/xml',
+)
 
+def validate_file_type(req, resp, resource, params):
+	"""Vérifie que la requête POST a pour content_type xml
+	Il faut l'utiliser avant une méthode où une classe pour
+	qu'elle agisse sur celle-ci
+	"""
+	if req.content_type not in ALLOWED_FILE_TYPE:
+		msg = 'Le format du fichier doit être XML'
+		raise falcon.HTTPBadRequest('Bad request', msg)
 
 class Hosts(object):
 	# Chemin pour le fichier POST
@@ -33,7 +44,8 @@ class Hosts(object):
 		resp.body = mbody
 		resp.content_type = falcon.MEDIA_XML
 		
-	# Gère les requêtes post	
+	# Gère les requêtes post
+	@falcon.before(validate_file_type)
 	def on_post(self, req, resp):
 		resp.status = falcon.HTTP_201
 		# On lit le contenue de la requête, on le met en string
