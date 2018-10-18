@@ -30,6 +30,7 @@ class host(object):
 				mbody = mbody + name + '\n' + contents 
 		#	allfiles.append(contents)
 		resp.body = mbody
+		resp.content_type = falcon.MEDIA_XML
 		
 	# Gère les requêtes post	
 	def on_post(self, req, resp):
