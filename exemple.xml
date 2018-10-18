@@ -1,8 +1,8 @@
 <host>
-	<MACadd>080027308D73</MACadd>
-	<OS>centos</OS>
-	<IP>192.168.0.100</IP>
-	<NOM>CastleIT</NOM>
+	<MACadd>080027399D73</MACadd>
+	<OS>freebsd</OS>
+	<IP>192.168.0.102</IP>
+	<NOM>fbsdtest</NOM>
 	<MDP_ROOT>password</MDP_ROOT>
 	<NOM_USER>julian</NOM_USER>
 	<MDP_USER>password</MDP_USER>
