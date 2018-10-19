@@ -68,11 +68,12 @@ def menagepxe(mac, nom, osinstall):
 		# On vérifie que l'adresse MAC en soit bien une
 		X='([a-fA-F0-9]{2}[" ":\-]?){6}'
 		ismac = re.compile(X).match(mac)
-		if ismac:
-			pass
-		else:
-			print('Adresse MAC invalide. Quitte le script')
-			sys.exit
+		# Pas besoin, on ne fait que supprimer des fichiers
+		#if ismac:
+		#	pass
+		#else:
+		#	print('Adresse MAC invalide. Quitte le script')
+		#	sys.exit
 
 		# On veut une adresse MAC en minuscule, séparée par "-"
 		# On commence par séparer l'adresse MAC dans une list

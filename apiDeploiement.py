@@ -4,6 +4,7 @@ import os
 import installationxml as ix
 import suppressionhote as suph
 import xml.etree.ElementTree as ET
+import verifxml 
 
 ALLOWED_FILE_TYPE = (
 	'application/xml',
@@ -36,34 +37,46 @@ class Hosts(object):
 	def on_get(self, req, resp):
 		resp.status = falcon.HTTP_200
 		mbody = ''
-		for file in os.listdir(self._storage_path):
-			name = os.path.join(self._storage_path, file)
-			with open(name, 'r') as fichier:
-				contents = fichier.read()
-				mbody = mbody + file + '\n' + contents 
-		resp.body = mbody
-		resp.content_type = falcon.MEDIA_XML
+		if os.listdir(self._storage_path) == []:
+			resp.body = "Il n'y a aucun hôte enregistré"
+			resp.content_type = falcon.MEDIA_TEXT
+		else:
+			for file in os.listdir(self._storage_path):
+				name = os.path.join(self._storage_path, file)
+				with open(name, 'r') as fichier:
+					contents = fichier.read()
+					mbody = mbody + file + '\n' + contents 
+			resp.body = mbody
+			resp.content_type = falcon.MEDIA_XML
 		
 	# Gère les requêtes post
 	@falcon.before(validate_file_type)
 	def on_post(self, req, resp):
-		resp.status = falcon.HTTP_201
 		# On lit le contenue de la requête, on le met en string
 		data = req.stream.read().decode('utf-8')
 		#print(data)
-		# On lui donne un nom unique
-		name = '{uuid}'.format(uuid=uuid.uuid4())
-		# On définit le chemin où le contenue sera sauvegardé
-		res_path = os.path.join(self._storage_path, name)
-		# On écrit le fichier sur le serveur
-		with open(res_path, 'w') as fichier:
-			fichier.write(data)
-		# Location header pour la ressource
-		resp.location = '/host/' + name
-		
-		# On exécute le script qui prépare l'intalle
-		ix.installxml(res_path)
-		
+		test = verifxml.validationxml(data)
+		if test != '':
+			#print(test)
+			resp.status = falcon.HTTP_415
+			resp.body = test
+			resp.content_type = falcon.MEDIA_TEXT
+		else:
+			#print("Tout va bien")
+			resp.status = falcon.HTTP_201
+			# On lui donne un nom unique
+			name = '{uuid}'.format(uuid=uuid.uuid4())
+			# On définit le chemin où le contenue sera sauvegardé
+			res_path = os.path.join(self._storage_path, name)
+			# On écrit le fichier sur le serveur
+			with open(res_path, 'w') as fichier:
+				fichier.write(data)
+			# Location header pour la ressource
+			resp.location = '/host/' + name
+			
+			# On exécute le script qui prépare l'intalle
+			ix.installxml(res_path)
+			
 		
 class Host(object):
 	"""Affiche ou supprime un host 
