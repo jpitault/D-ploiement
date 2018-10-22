@@ -44,10 +44,10 @@ Quand elle reçoit une requête POST, elle vérifie que le header content-type =
 ---> GET
 Retourne la liste de tous les hosts actuellement sur le serveur, sous la forme :
 
-uuid
-<Contenu du XML>
-uuid
-<Contenu du XML>
+> uuid
+> <Contenu du XML>
+> uuid
+> <Contenu du XML>
 etc...
 
 ---> POST
