@@ -133,9 +133,9 @@ def debian(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i grub-installer/with_other_os boolean true\n')
 		fichier.write('d-i grub-installer/bootdev  string /dev/sda /dev/sdb\n')
 		fichier.write('d-i finish-install/reboot_in_progress note\n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstall.sh http://192.168.0.254/postinstall.sh; in-target /bin/sh /tmp/postinstall.sh\n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh\n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/bondinterfaces.sh http://192.168.0.254/bondinterfaces.sh; in-target /bin/bash /tmp/bondinterfaces.sh\n')
+		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstall.sh http://192.168.0.254/postinstall.sh; in-target /bin/sh /tmp/postinstall.sh; \\')
+		fichier.write('\nin-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh;\\')
+		fichier.write('\nin-target wget --output-document=/tmp/bondinterfaces.sh http://192.168.0.254/bondinterfaces.sh; in-target /bin/bash /tmp/bondinterfaces.sh;')
 
 
 # Ecrire le kickstart avec des variables
@@ -290,8 +290,8 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i grub-installer/with_other_os boolean true \n')
 		fichier.write('d-i grub-installer/bootdev  string /dev/sda /dev/sdb \n')
 		fichier.write('d-i finish-install/reboot_in_progress note \n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh \n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/agregatubuntu.sh http://192.168.0.254/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh \n')
+		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh; \\')
+		fichier.write('\nin-target wget --output-document=/tmp/agregatubuntu.sh http://192.168.0.254/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh; ')
 
 		
 def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
@@ -314,7 +314,7 @@ def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
 	nom_preseed = '/var/www/html/' + mac + "debian.cfg"
 	
 	with open(nom_preseed,'a') as fichier:
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/{} http://192.168.0.254/{}; in-target /bin/bash /tmp/{} \n'.format(script, script, script))
+		fichier.write('\\\nin-target wget --output-document=/tmp/{} http://192.168.0.254/{}; in-target /bin/bash /tmp/{} ;'.format(script, script, script))
 		
 		
 # Ecrire fichier qui répond aux questions de l'installateur OpenBSD, le fichier disklabel et le set agrégat
