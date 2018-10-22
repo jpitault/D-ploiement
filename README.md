@@ -9,7 +9,14 @@ OS présents :
  - OpenBSD
  - Proxmox
 
- 
+## Prérequis
+
+Serveur DHCP (isc-dhcp-server)
+Serveur TFTP (tftpd-hpa)
+Serveur Web (apache2)
+Falcon https://falconframework.org/
+Gunicorn https://gunicorn.org/
+
 ## L'API REST
 
 L'API REST répond sur les URL /hosts /hosts/{uuid} et /hosts/ip
@@ -74,3 +81,44 @@ hostname1 : ip1
 hostname2 : ip2
 ...
 
+
+## Scripts python
+
+### Pour l'API REST
+
+apiDeploiement.py contient l'app qui utilise falcon et qui est servit par gunicorn.
+Il contient l'emplacement où sont stocké les fichiers reçut par l'API.
+
+Pour lancer l'app :
+```bash
+gunicorn apiDeploiement:api
+```
+
+### Vérification du contenue du xml
+
+c'est le script verifxml.py qui s'en charge.
+
+### Pour une installation
+
+Scripts nécessaires pour l'ajout d'un host :
+ - installationxml : prend un fichier xml et lance les scripts :
+   - ajouterhost : s'occupe de la configuration du DHCP
+   - fichierspxe : s'occupe de la configuration du PXE (fichier dans le serveur tftp)
+   - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml
+
+Ils assument :
+ - Que la conf du DHCP est à /etc/dhcp
+ - Le serveur TFTP a pour racine /srv/tftp/ et qu'il utilise ensuite un dossier pour chaque OS
+ - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle
+ 
+Le script bsdinstallzfs.txt est utilisé comme modèle par configinstall lors de la création des fichiers d'installation de freebsd.
+
+
+### Pour la suppresion d'une ressource
+
+suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'installation.
+
+### Les autres
+
+Les autres scripts et ceux qui sont dans les dossiers ne servent pas au déploiement par API.
+Ils ne sont pas à jour.
