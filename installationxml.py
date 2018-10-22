@@ -25,6 +25,8 @@ def installxml(file):
 	mdp_user = root[6].text
 	taille_swap = root[7].text
 
+	# On met le nom de l'OS en minuscules
+	os = os.lower()
 
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
