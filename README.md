@@ -11,16 +11,17 @@ OS présents :
 
 ## Prérequis
 
-Serveur DHCP (isc-dhcp-server)
-Serveur TFTP (tftpd-hpa)
-Serveur Web (apache2)
-Falcon https://falconframework.org/
-Gunicorn https://gunicorn.org/
+ - Serveur DHCP (isc-dhcp-server)
+ - Serveur TFTP (tftpd-hpa)
+ - Serveur Web (apache2)
+ - Falcon https://falconframework.org/
+ - Gunicorn https://gunicorn.org/
 
 ## L'API REST
 
 L'API REST répond sur les URL /hosts /hosts/{uuid} et /hosts/ip
 Elle fonctionne avec des fichiers .xml qui ont le format :
+```xml
 <host>
 	<MACadd>001122334455</MACadd>
 	<OS>debian</OS>
@@ -31,6 +32,7 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 	<MDP_USER>passworduser</MDP_USER>
 	<SWAP>1024</SWAP>
 </host>
+```
 
 Le nom des champs n'a pas d'importance mais leurs ordre doit être respecté.
 Le SWAP est en MO
