@@ -5,6 +5,7 @@ import subprocess
 # On écrit le script d'installation de bsd, en partant du modèle et en changeant les variables
 # Il faut que le script de sortie s'appelle : mac-00:11:22:33:44:aa ( définit dans l'image mfsbsd)
 
+server = '192.168.0.254'
 def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
@@ -133,9 +134,9 @@ def debian(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i grub-installer/with_other_os boolean true\n')
 		fichier.write('d-i grub-installer/bootdev  string /dev/sda /dev/sdb\n')
 		fichier.write('d-i finish-install/reboot_in_progress note\n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstall.sh http://192.168.0.254/postinstall.sh; in-target /bin/sh /tmp/postinstall.sh; \\')
-		fichier.write('\nin-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh;\\')
-		fichier.write('\nin-target wget --output-document=/tmp/bondinterfaces.sh http://192.168.0.254/bondinterfaces.sh; in-target /bin/bash /tmp/bondinterfaces.sh;')
+		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstall.sh http://{}/postinstall.sh; in-target /bin/sh /tmp/postinstall.sh; \\'.format(server))
+		fichier.write('\nin-target wget --output-document=/tmp/postinstallraid.sh http://{}/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh;\\'.format(server))
+		fichier.write('\nin-target wget --output-document=/tmp/bondinterfaces.sh http://{}/bondinterfaces.sh; in-target /bin/bash /tmp/bondinterfaces.sh;'.format(server))
 
 
 # Ecrire le kickstart avec des variables
@@ -192,7 +193,7 @@ def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('%end \n')
 		fichier.write('%post \n')
 		fichier.write('echo "Ceci est un test" > /root/test \n')
-		fichier.write('wget --output-document=/tmp/agregatcentos.sh http://192.168.0.254/agregatcentos.sh \n')
+		fichier.write('wget --output-document=/tmp/agregatcentos.sh http://{}/agregatcentos.sh \n'.format(server))
 		fichier.write('bash /tmp/agregatcentos.sh \n')
 		fichier.write('grub2-install /dev/sdb \n')
 		fichier.write('%end \n')
@@ -290,8 +291,8 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i grub-installer/with_other_os boolean true \n')
 		fichier.write('d-i grub-installer/bootdev  string /dev/sda /dev/sdb \n')
 		fichier.write('d-i finish-install/reboot_in_progress note \n')
-		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://192.168.0.254/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh; \\')
-		fichier.write('\nin-target wget --output-document=/tmp/agregatubuntu.sh http://192.168.0.254/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh; ')
+		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://{}/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh; \\'.format(server))
+		fichier.write('\nin-target wget --output-document=/tmp/agregatubuntu.sh http://{}/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh; '.format(server))
 
 		
 def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
@@ -314,7 +315,7 @@ def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
 	nom_preseed = '/var/www/html/' + mac + "debian.cfg"
 	
 	with open(nom_preseed,'a') as fichier:
-		fichier.write('\\\nin-target wget --output-document=/tmp/{} http://192.168.0.254/{}; in-target /bin/bash /tmp/{} ;'.format(script, script, script))
+		fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0} ;'.format(script, server))
 		
 		
 # Ecrire fichier qui répond aux questions de l'installateur OpenBSD, le fichier disklabel et le set agrégat
@@ -364,12 +365,12 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('Password for user = {}\n'.format(mdp_user))
 		fichier.write('What timezone are you in = Europe/Paris\n')
 		fichier.write('Location of sets = http\n')
-		fichier.write('HTTP Server = 192.168.0.254\n')
+		fichier.write('HTTP Server = {}\n'.format(server))
 		fichier.write('Use http instead = yes\n')
 		fichier.write('Set name(s) = -x* -g* done\n')
 		fichier.write('Checksum test for site62-{}.tgz failed. Continue anyway = yes\n'.format(nom))
 		fichier.write('Unverified sets: site62-{}.tgz. Continue without verification = yes\n'.format(nom))
-		fichier.write('URL to autopartitioning template for disklabel = http://192.168.0.254/openbsd/{}\n'.format(disklabel))
+		fichier.write('URL to autopartitioning template for disklabel = http://{}/openbsd/{}\n'.format(server, disklabel))
 		
 		
 	# On écrit le fichier Disklabel

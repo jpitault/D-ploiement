@@ -3,7 +3,7 @@ import re
 
 # Scripts pour créer fichiers pxe
 
-
+server = "192.168.0.254"
 
 def pxefreebsd(mac):
 	# Pour freebsd pas vraiment besoin de variables
@@ -57,7 +57,7 @@ def pxedebian(mac):
 	mac = "-".join(listmac)
 	# On met en minuscule
 	mac = mac.lower()
-	server = "192.168.0.254"
+
 
 	file = "/srv/tftp/debian2/pxelinux.cfg/01-"+mac
 
@@ -90,7 +90,6 @@ def pxecentos(mac):
 	mac = "-".join(listmac)
 	# On met en minuscule
 	mac = mac.lower()
-	server = "192.168.0.254"
 
 	file = "/srv/tftp/centos/pxelinux.cfg/01-"+mac
 
@@ -112,7 +111,6 @@ def pxecentos(mac):
 def pxeubuntu(mac):
 	# variables
 	# il faut que l'adresse mac soit séparé par des "-" et en minuscule
-	server = "192.168.0.254"
 
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
