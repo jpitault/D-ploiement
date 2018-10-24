@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import re
+import sys
 
 # Scripts pour créer fichiers pxe
 
