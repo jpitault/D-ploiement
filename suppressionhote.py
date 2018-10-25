@@ -58,10 +58,10 @@ def menagepxe(mac, nom, osinstall):
 		pass
 	else:
 		# Juste parce que je n'ai toujours pas changé mes répertoires
-		if osinstall == 'debian':
-			osinstall = 'debian2'
-		if osinstall == 'ubuntu':
-			osinstall = 'ubuntu2'
+		#if osinstall == 'debian':
+		#	osinstall = 'debian2'
+		#if osinstall == 'ubuntu':
+		#	osinstall = 'ubuntu2'
 			
 			
 		# il faut que l'adresse mac soit séparé par des "-" et en minuscule

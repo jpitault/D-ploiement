@@ -60,7 +60,7 @@ def pxedebian(mac):
 	mac = mac.lower()
 
 
-	file = "/srv/tftp/debian2/pxelinux.cfg/01-"+mac
+	file = "/srv/tftp/debian/pxelinux.cfg/01-"+mac
 
 
 	# Créer le fichier
@@ -130,7 +130,7 @@ def pxeubuntu(mac):
 	# On met en minuscule
 	mac = mac.lower()
 
-	file = "/srv/tftp/ubuntu2/pxelinux.cfg/01-"+mac
+	file = "/srv/tftp/ubuntu/pxelinux.cfg/01-"+mac
 
 
 	# Créer le fichier

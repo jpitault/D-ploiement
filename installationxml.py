@@ -43,8 +43,7 @@ def installxml(file):
 
 
 	# On crée un fichier pour le boot pxe
-	if os == 'debian2' or os == 'debian':
-		os = 'debian2'
+	if os == 'debian':
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		# On crée le fichier pxe
@@ -61,14 +60,13 @@ def installxml(file):
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxefreebsd(mac)
 		configinstall.freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user)
-	elif os == 'ubuntu2' or os == 'ubuntu':
-		os = 'ubuntu2'
+	elif os == 'ubuntu':
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxeubuntu(mac)
 		configinstall.ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap)
 	elif os == 'proxmox':
-		os = 'debian2'
+		os = 'debian'
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxedebian(mac)
