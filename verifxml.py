@@ -41,7 +41,7 @@ def xml_os(xml):
 	#tree = ET.parse(xml)
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
-	osSupport = ['debian','ubuntu','centos','proxmox','freebsd','openbsd']
+	osSupport = ['debian','ubuntu','centos','proxmox','freebsd','openbsd','windows']
 	osinstall = root[1].text
 	osinstall = osinstall.lower()
 	assert (osinstall in osSupport), "Le champ 1 ne contient pas un OS supporté"

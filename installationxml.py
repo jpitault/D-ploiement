@@ -19,7 +19,7 @@ def installxml(file):
 	os = root[1].text
 	ip = root[2].text
 	nom = root[3].text
-	file = "/etc/dhcp/"+nom
+	#file = "/etc/dhcp/"+nom
 	mdp_root = root[4].text
 	nom_user = root[5].text
 	mdp_user = root[6].text
@@ -76,6 +76,10 @@ def installxml(file):
 	elif os == 'openbsd':
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		configinstall.openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap)
+	elif os =='windows':
+		ajouterhost.ajouterhost(mac, os, ip, nom)
+		fichierspxe.pxewindows(mac)
+		configinstall.winunattend(mac, nom, mdp_root)
 	else:
 		print('OS non supporté. Quitte le script')
 		sys.exit()

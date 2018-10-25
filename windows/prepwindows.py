@@ -3,7 +3,7 @@ import re
 import sys
 import ajouterhost
 import pxewindows
-import faireunattend
+import fairetest3
 
 # variables
 mac = input('MAC address :')
@@ -31,4 +31,4 @@ ajouterhost.ajouterhost(mac, os, ip, nom, file)
 
 pxewindows.pxewindows(mac)
 
-faireunattend.winunattend(mac)
+fairetest3.winunattend(mac)

@@ -67,6 +67,10 @@ elif os == 'proxmox':
 elif os == 'openbsd':
 	ajouterhost.ajouterhost(mac, os, ip, nom)
 	configinstall.openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap)
+elif os =='windows':
+	ajouterhost.ajouterhost(mac, os, ip, nom)
+	fichierspxe.pxewindows(mac)
+	configinstall.winunattend(mac, nom, mdp_root)
 else:
 	print('OS non supporté. Quitte le script')
 	sys.exit()

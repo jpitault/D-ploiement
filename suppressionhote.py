@@ -110,7 +110,7 @@ def menageconf(mac, nom, osinstall):
 
 	serveurweb = '/var/www/html/'
 
-	# OpenBSD est à part
+	# OpenBSD et windows sont à part
 	if osinstall == 'openbsd':
 		# supprime fichier réponse et fichier disklabel
 		for fichier in os.listdir(serveurweb + 'openbsd/'):
@@ -129,7 +129,16 @@ def menageconf(mac, nom, osinstall):
 		except OSError as  e:
 			if e.errno == 2:
 				pass
-			
+	
+	if osinstall == 'windows':
+		# supprime le fichier réponse (unattend), pour ça on a besoin de la mac en majuscule
+		unattend = '/samba/winserv2016/' + mact.upper() + '.xml'
+		try:
+			os.remove(unattend)
+		except OSError as e:
+			if e.errno == 2:
+				pass
+		
 	# Pour les autres OS
 	else:
 		for fichier in os.listdir(serveurweb):
