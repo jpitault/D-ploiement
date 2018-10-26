@@ -96,7 +96,7 @@ def menagepxe(mac, nom, osinstall):
 				pass
 			
 # On supprime les fichiers de conf
-def menageconf(mac, nom, osinstall):
+def menageconf(mac, nom, osinstall, ip):
 	# On a besoin de la MAC en minuscule et séparée par des ":" et par des "-"
 	# On met en minuscule
 	mac = mac.lower()
@@ -131,8 +131,9 @@ def menageconf(mac, nom, osinstall):
 				pass
 	
 	if osinstall == 'windows':
-		# supprime le fichier réponse (unattend), pour ça on a besoin de la mac en majuscule
-		unattend = '/samba/winserv2016/' + mact.upper() + '.xml'
+		# supprime le fichier réponse (unattend), pour ça on a besoin de la mac en majuscule ou de l'ip en fonction de la méthode choisie
+		#unattend = '/samba/winserv2016/' + mact.upper() + '.xml'
+		unattend = '/samba/winserv2016/' + ip + '.xml'
 		try:
 			os.remove(unattend)
 		except OSError as e:
@@ -149,10 +150,10 @@ def menageconf(mac, nom, osinstall):
 					if e.errno == 2:
 						pass
 				
-def menage(mac, nom, osinstall):
+def menage(mac, nom, osinstall, ip):
 	menagedhcp(mac, nom, osinstall)
 	menagepxe(mac, nom, osinstall)
-	menageconf(mac, nom, osinstall)
+	menageconf(mac, nom, osinstall, ip)
 
 def menagexml(file):
 	# Lit le .xml
@@ -163,5 +164,6 @@ def menagexml(file):
 	mac = root[0].text
 	osinstall = root[1].text
 	nom = root[3].text
+	ip = root[2].text
 	
-	menage(mac, nom, osinstall)
+	menage(mac, nom, osinstall, ip)
