@@ -8,12 +8,14 @@ OS présents :
  - FreeBSD
  - OpenBSD
  - Proxmox
+ - Windows
 
 ## Prérequis
 
  - Serveur DHCP (isc-dhcp-server)
  - Serveur TFTP (tftpd-hpa)
  - Serveur Web (apache2)
+ - Serveur SAMBA (pour Windows)
  - Falcon https://falconframework.org/
  - Gunicorn https://gunicorn.org/
 
@@ -25,6 +27,10 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 <host>
 	<MACadd>001122334455</MACadd>
 	<OS>debian</OS>
+	<!-- Si l'OS est windows, on peut mettre un sous-champ pour indiquer si on veut du soft raid -->
+	<!-- <OS>windows
+			<raid>raid</raid>
+		 </OS> -->
 	<IP>192.168.0.X</IP>
 	<NOM>hostname</NOM>
 	<MDP_ROOT>passwordroot</MDP_ROOT>

@@ -174,5 +174,7 @@ def pxewindows(mac):
 		fichier.write("label windows\n")
 		fichier.write("  menu label Install windows server2016 auto unattend\n")
 		fichier.write("  KERNEL memdisk\n")
-		fichier.write("  INITRD winpe_amd64_MAC.iso\n")
+		# On peut utiliser l'IP où la MAC pour différencier le fichier réponse
+		#fichier.write("  INITRD winpe_amd64_MAC.iso\n")
+		fichier.write("  INITRD winpe_amd64_IP.iso\n")
 		fichier.write("  APPEND iso raw")

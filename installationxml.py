@@ -75,9 +75,15 @@ def installxml(file):
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		configinstall.openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap)
 	elif os =='windows':
+		# On attend un sous élément à OS si on veut du soft raid
+		# il faut que root[1][0].text == 'raid' pour que le fichier unattend installe le soft raid
+		try:
+			raid = root[1][0].text
+		except IndexError:
+			raid = 'pas de soft raid'
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxewindows(mac)
-		configinstall.winunattend(mac, nom, mdp_root)
+		configinstall.winunattend(mac, nom, mdp_root, raid, ip)
 	else:
 		print('OS non supporté. Quitte le script')
 		sys.exit()

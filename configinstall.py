@@ -398,7 +398,13 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		
 		
 # fichier unattend windows server 2016
-def winunattend(mac, computername, mdp_admin):
+def winunattend(mac, computername, mdp_admin, raid, ip):
+	# On nettoie les disques 0 et 1 dans WinPE avec diskpart
+
+
+	# On utilise soit l'adresse IP soit l'adresse MAC pour différencier le fichier unattend.xml
+	fileip = '/samba/winserv2016/' + ip + '.xml'
+	
 	# L'adresse MAC doit être en majuscule et séparée par des "-"
 	# On commence par séparer l'adresse MAC dans une list
 	listmac = re.findall('[a-fA-F0-9]{2}',mac)
@@ -407,8 +413,9 @@ def winunattend(mac, computername, mdp_admin):
 	# On met en majuscule
 	mac = mac.upper()
 	# fichier de sortie
-	file = '/samba/winserv2016/' + mac + '.xml'
+	filemac = '/samba/winserv2016/' + mac + '.xml'
 	
+	serversamba = '10.10.75.2'
 	
 	# variables ?
 	productkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
@@ -416,24 +423,25 @@ def winunattend(mac, computername, mdp_admin):
 	#mdp_admin = 'password'
 	regorg = 'castleit'
 	regown = 'castleit'
+	
 
-	with open(file , 'w') as fichier:
+	with open(fileip , 'w') as fichier:	
 		fichier.write('<?xml version="1.0" encoding="utf-8"?> \n')
 		fichier.write('<unattend xmlns="urn:schemas-microsoft-com:unattend"> \n')
 		fichier.write('    <settings pass="specialize"> \n')
 		fichier.write('        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> \n')
 		fichier.write('            <AutoLogon> \n')
 		fichier.write('                <Password> \n')
-		fichier.write('                    <Value>password</Value> \n')
+		fichier.write('                    <Value>{}</Value> \n'.format(mdp_admin))
 		fichier.write('                    <PlainText>true</PlainText> \n')
 		fichier.write('                </Password> \n')
 		fichier.write('                <Enabled>true</Enabled> \n')
 		fichier.write('                <Username>Administrateur</Username> \n')
 		fichier.write('                <LogonCount>1</LogonCount> \n')
 		fichier.write('            </AutoLogon> \n')
-		fichier.write('            <ComputerName>windowspxe</ComputerName> \n')
-		fichier.write('            <RegisteredOrganization>castleit</RegisteredOrganization> \n')
-		fichier.write('            <RegisteredOwner>propriétaire</RegisteredOwner> \n')
+		fichier.write('            <ComputerName>{}</ComputerName> \n'.format(computername))
+		fichier.write('            <RegisteredOrganization>{}</RegisteredOrganization> \n'.format(regorg))
+		fichier.write('            <RegisteredOwner>{}</RegisteredOwner> \n'.format(regown))
 		fichier.write('            <TimeZone>Romance Standard Time</TimeZone> \n')
 		fichier.write('        </component>		 \n')
 		fichier.write('    </settings> \n')
@@ -441,10 +449,40 @@ def winunattend(mac, computername, mdp_admin):
 		fichier.write('        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> \n')
 		fichier.write('            <FirstLogonCommands> \n')
 		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-		fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name 'bond0' -TeamMembers 'Ethernet','Ethernet 2' -TeamingMode SwitchIndependent -LoadBalancingAlgorithm TransportPorts -Confirm:$false"</CommandLine> \n')
+		fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name \'bond0\' -TeamMembers \'Ethernet\',\'Ethernet 2\' -TeamingMode SwitchIndependent -LoadBalancingAlgorithm TransportPorts -Confirm:$false"</CommandLine> \n')
 		fichier.write('                    <Description>Active le teaming</Description> \n')
-		fichier.write('                    <Order>1</Order> \n')
+		fichier.write('                    <Order>9</Order> \n')
 		fichier.write('                </SynchronousCommand> \n')
+		
+		# Si l'option raid est présente on crée un software RAID1
+		if raid == 'raid':
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>net use N: \\{}\public /user:user pass</CommandLine> \n'.format(serversamba))
+			fichier.write('                    <Description>Mappe le lecteur</Description> \n')
+			fichier.write('                    <Order>1</Order> \n')
+			fichier.write('                </SynchronousCommand> \n')
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			# Le fichier MirrorDiskpart.txt est hebergé sur le partage samba
+			# Il contient les commandes qui permettent de créer un RAID1 avec diskpart.exe:
+			# MirrorDiskpart.txt --->
+			# 	select disk 1
+			# 	convert dynamic
+			# 	select disk 0
+			# 	convert dynamic
+			# 	select volume 1
+			# 	add disk 1
+			# 	select volume 0
+			# 	add disk 1
+			fichier.write('                    <CommandLine>diskpart.exe /s N:\winserv2016\MirrorDiskpart.txt</CommandLine> \n')
+			fichier.write('                    <Description>Crée un miroir</Description> \n')
+			fichier.write('                    <Order>2</Order> \n')
+			fichier.write('                </SynchronousCommand> \n')
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>net use N: /delete</CommandLine> \n')
+			fichier.write('                    <Description>Supprimer le mappage</Description> \n')
+			fichier.write('                    <Order>3</Order> \n')
+			fichier.write('                </SynchronousCommand>				 \n')
+			
 		fichier.write('            </FirstLogonCommands>             \n')
 		fichier.write('			<OOBE> \n')
 		fichier.write('                <HideEULAPage>true</HideEULAPage> \n')
@@ -457,7 +495,7 @@ def winunattend(mac, computername, mdp_admin):
 		fichier.write('            </OOBE> \n')
 		fichier.write('            <UserAccounts> \n')
 		fichier.write('                <AdministratorPassword> \n')
-		fichier.write('                    <Value>password</Value> \n')
+		fichier.write('                    <Value>{}</Value> \n'.format(mdp_admin))
 		fichier.write('                    <PlainText>true</PlainText> \n')
 		fichier.write('                </AdministratorPassword> \n')
 		fichier.write('            </UserAccounts> \n')
@@ -531,7 +569,7 @@ def winunattend(mac, computername, mdp_admin):
 		fichier.write('            </ImageInstall> \n')
 		fichier.write('            <UserData> \n')
 		fichier.write('                <ProductKey> \n')
-		fichier.write('                    <Key>WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY</Key> \n')
+		fichier.write('                    <Key>{}</Key> \n'.format(productkey))
 		fichier.write('                    <WillShowUI>OnError</WillShowUI> \n')
 		fichier.write('                </ProductKey> \n')
 		fichier.write('                <AcceptEula>true</AcceptEula> \n')
@@ -540,4 +578,3 @@ def winunattend(mac, computername, mdp_admin):
 		fichier.write('    </settings> \n')
 		fichier.write('    <cpi:offlineImage cpi:source="wim:c:/iso/install.wim#Windows Server 2016 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" /> \n')
 		fichier.write('</unattend> \n')
-	
