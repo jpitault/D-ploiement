@@ -664,6 +664,8 @@ def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER):
 		fichier.write('%firstboot --interpreter=busybox\n')
 		fichier.write("esxcli system account add -d 'description du compte' -i {0} -p {1} -c {1}\n".format(NOM_USER, MDP_USER))
 		fichier.write('esxcli system permission set -i {} -r Admin\n'.format(NOM_USER))
+		fichier.write('# assign license')
+		fichier.write('#vim-cmd vimsvc/license --set AAAAA-BBBBB-CCCCC-DDDDD-EEEEE')
 		fichier.write('##vSwitch configuration\n')
 		fichier.write('# Attacher vmnic1 à vSwitch0\n')
 		fichier.write('esxcli network vswitch standard uplink add --uplink-name vmnic1 --vswitch-name vSwitch0\n')
