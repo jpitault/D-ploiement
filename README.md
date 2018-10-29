@@ -9,6 +9,7 @@ OS présents :
  - OpenBSD
  - Proxmox
  - Windows
+ - ESXi
 
 ## Prérequis
 
