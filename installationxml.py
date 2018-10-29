@@ -84,6 +84,10 @@ def installxml(file):
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxewindows(mac)
 		configinstall.winunattend(mac, nom, mdp_root, raid, ip)
+	elif os == 'esxi':
+		ajouterhost.ajouterhost(mac, os, ip, nom)
+		fichierspxe.pxeesxi(mac)
+		configinstall.esxi(mac, mdp_root, nom_user, mdp_user)
 	else:
 		print('OS non supporté. Quitte le script')
 		sys.exit()
