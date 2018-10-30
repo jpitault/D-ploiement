@@ -51,22 +51,27 @@ def xml_os(xml):
 def validationxml(xml):
 	errors = ''
 	try:
-		xml_taille(xml)
-	except AssertionError:
-		errors = errors + "Le fichier XML ne comprend pas 8 champs"
+		root = ET.fromstring(xml)
+	except ET.ParseError as e:
+		errors = errors + "Le fichier n'est pas conforme au format XML."
 	else:
 		try:
-			xml_mac(xml)
+			xml_taille(xml)
 		except AssertionError:
-			errors = errors + '\n' + "Le champ 0 ne contient pas une MAC valide"
-		try:
-			xml_ip(xml)
-		except AssertionError:
-			errors = errors + '\n' + "Le champ 2 ne contient pas une IP valide"
-		try:
-			xml_os(xml)
-		except AssertionError:
-			errors = errors + '\n' + "Le champ 1 ne contient pas le nom d'un OS supporté"
+			errors = errors + "Le fichier XML ne comprend pas 8 champs"
+		else:
+			try:
+				xml_mac(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ 0 ne contient pas une MAC valide"
+			try:
+				xml_ip(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ 2 ne contient pas une IP valide"
+			try:
+				xml_os(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ 1 ne contient pas le nom d'un OS supporté"
 	
 	return errors
 
