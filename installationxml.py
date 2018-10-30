@@ -24,6 +24,16 @@ def installxml(file):
 	nom_user = root[5].text
 	mdp_user = root[6].text
 	taille_swap = root[7].text
+	
+	# Sinon avec le nom des champs fixe
+	# mac = root.find('MACadd').text
+	# os = root.find('OS').text
+	# ip = root.find('IP').text
+	# nom = root.find('NOM').text
+	# mdp_root = root.find('MDP_ROOT').text
+	# nom_user = root.find('NOM_USER').text
+	# mdp_user = root.find('MDP_USER').text
+	# taille_swap = root.find('SWAP').text
 
 	# On met le nom de l'OS en minuscules
 	os = os.lower()
