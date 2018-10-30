@@ -47,7 +47,16 @@ def xml_os(xml):
 	assert (osinstall in osSupport), "Le champ 1 ne contient pas un OS supporté"
 	
 
+# On ne veut pas d'espaces dans le nom qui servira de hostname
+def xml_nom(xml):
+	root = ET.fromstring(xml)
+	nom = root[3].text
+	#nom = root.find('NOM').text
+	X = '[^a-zA-Z0-9_:-]'
+	assert not (re.search(X, nom))
 	
+
+# On rassemble le tout
 def validationxml(xml):
 	errors = ''
 	try:
@@ -72,6 +81,10 @@ def validationxml(xml):
 				xml_os(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ 1 ne contient pas le nom d'un OS supporté"
+			try:
+				xml_nom(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide. Seul les caractères alphanumériques '_' et '-' sont autorisés"
 	
 	return errors
 
