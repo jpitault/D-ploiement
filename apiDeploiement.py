@@ -10,6 +10,11 @@ ALLOWED_FILE_TYPE = (
 	'application/xml',
 )
 
+# Chemin ou seront stockés les ressources
+storage_path='/root/fichiersxml'
+if not os.path.exists(storage_path):
+	os.makedirs(storage_path)
+
 def validate_file_type(req, resp, resource, params):
 	"""Vérifie que la requête POST a pour content_type xml
 	Il faut l'utiliser avant une méthode où une classe pour
@@ -133,6 +138,8 @@ class UsedIP(object):
 			
 api = falcon.API()
 
-api.add_route('/hosts', Hosts(storage_path='/root/fichiersxml'))
-api.add_route('/hosts/{name}', Host(storage_path='/root/fichiersxml'))
-api.add_route('/hosts/ip', UsedIP(storage_path='/root/fichiersxml'))
+
+
+api.add_route('/hosts', Hosts(storage_path))
+api.add_route('/hosts/{name}', Host(storage_path))
+api.add_route('/hosts/ip', UsedIP(storage_path))
