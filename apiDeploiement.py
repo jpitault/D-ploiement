@@ -60,6 +60,8 @@ class Hosts(object):
 		# On lit le contenue de la requête, on le met en string
 		data = req.stream.read().decode('utf-8')
 		#print(data)
+		# On exécute un script qui retourne une string vide si on accepte la data envoyé
+		# Sinon retourne une string avec les problèmes que l'on a trouvé.
 		test = verifxml.validationxml(data)
 		if test != '':
 			#print(test)
@@ -131,7 +133,11 @@ class UsedIP(object):
 			name_path = os.path.join(self._storage_path, file)
 			tree = ET.parse(name_path)
 			root = tree.getroot()
-			tempbody = tempbody + root[3].text + '	:	' + root[2].text + '\n'
+			nom = root[3].text
+			#nom = root.find("NOM").text
+			ip = root[2].text
+			#ip = root.find("IP").text
+			tempbody = tempbody + nom + '	:	' + ip + '\n'
 		resp.body = tempbody
 		resp.content_type = falcon.MEDIA_TEXT
 
