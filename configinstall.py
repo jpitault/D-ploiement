@@ -352,6 +352,10 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 	# Le nom du fichier disklabel
 	disklabel = mac + '-disklabel'
 	disklabelfile = '/var/www/html/openbsd/' + disklabel
+	
+	# La version de openbsd
+	version = '6.2'
+	versionSansPoint = version.replace(".", "")
 
 	# Puis on écrit le fichier réponse
 	with open(file, 'w') as fichier:
@@ -368,8 +372,8 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('HTTP Server = {}\n'.format(server))
 		fichier.write('Use http instead = yes\n')
 		fichier.write('Set name(s) = -x* -g* done\n')
-		fichier.write('Checksum test for site62-{}.tgz failed. Continue anyway = yes\n'.format(nom))
-		fichier.write('Unverified sets: site62-{}.tgz. Continue without verification = yes\n'.format(nom))
+		fichier.write('Checksum test for site{}-{}.tgz failed. Continue anyway = yes\n'.format(versionSansPoint, nom))
+		fichier.write('Unverified sets: site{}-{}.tgz. Continue without verification = yes\n'.format(versionSansPoint, nom))
 		fichier.write('URL to autopartitioning template for disklabel = http://{}/openbsd/{}\n'.format(server, disklabel))
 		
 		
@@ -385,12 +389,13 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		
 	# Pour la conf agrégat on a besoin d'utiliser un set
 	# Pour l'instant on ne fait que copier, en renommant, un set déjà créer
-	nouv_set = 'site62-' + nom + '.tgz'
-	subprocess.run(['cp', 'site62.tgz', '/var/www/html/pub/OpenBSD/6.2/amd64/{}'.format(nouv_set)])
+	nouv_set = 'site' + versionSansPoint + '-' + nom + '.tgz'
+	subprocess.run(['cp', 'site{}.tgz'.format(versionSansPoint), '/var/www/html/pub/OpenBSD/{}/amd64/{}'.format(version, nouv_set)])
 	
 	# Il faut mettre à jour le fichier index
-	index = '/var/www/html/pub/OpenBSD/6.2/amd64/index.txt'
-	proc = subprocess.Popen(['ls', '-l', '/var/www/html/pub/OpenBSD/6.2/amd64/'], stdout=subprocess.PIPE)
+	cheminSet = '/var/www/html/pub/OpenBSD/{}/amd64/'.format(version)
+	index = cheminSet + 'index.txt'
+	proc = subprocess.Popen(['ls', '-l', cheminSet], stdout=subprocess.PIPE)
 	list = proc.stdout.read().decode("utf-8")
 	
 	with open(index, 'w') as fichier:

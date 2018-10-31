@@ -40,9 +40,7 @@ Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer l
 ```xml
 <host>
 	<MACadd>001122334455</MACadd>
-	<OS>windows
-		<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY>
-		<RAID>raid</RAID>
+	<OS>windows<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY><RAID>raid</RAID>
 	</OS>
 	<IP>192.168.0.X</IP>
 	<NOM>hostname</NOM>

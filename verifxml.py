@@ -49,6 +49,11 @@ def xml_os(xml):
 	osinstall = root[1].text
 	#osinstall = root.find('OS').text
 	osinstall = osinstall.lower()
+	# containOs = 0
+	# for o in osSupport:
+		# if o in osinstall:
+			# containOs = 1
+	# assert (containOs == 1)
 	assert (osinstall in osSupport), "Le champ 1 ne contient pas un OS supporté"
 	
 
