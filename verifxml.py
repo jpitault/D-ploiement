@@ -18,7 +18,9 @@ def xml_mac(xml):
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
 	X='([a-fA-F0-9]{2}[:|\-]?){6}'
-	estunemac = re.compile(X).match(root[0].text)
+	mac = root[0].text
+	#mac = root.find('MACadd').text
+	estunemac = re.compile(X).match(mac)
 	
 	assert (estunemac), "Le champ 0 n'est pas une mac"
 	#print("Le champ 0 a le format d'une MAC")
@@ -32,7 +34,9 @@ def xml_ip(xml):
 	root = ET.fromstring(xml)
 	X = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}'
 	ValidIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
-	estuneip = re.compile(X).match(root[2].text)
+	ip = root[2].text
+	#ip = root.find('IP').text
+	estuneip = re.compile(X).match(ip)
 	assert (estuneip), "Le champ 2 n'est pas une IP"
 
 	
@@ -43,6 +47,7 @@ def xml_os(xml):
 	root = ET.fromstring(xml)
 	osSupport = ['debian','ubuntu','centos','proxmox','freebsd','openbsd','windows','esxi']
 	osinstall = root[1].text
+	#osinstall = root.find('OS').text
 	osinstall = osinstall.lower()
 	assert (osinstall in osSupport), "Le champ 1 ne contient pas un OS supporté"
 	
