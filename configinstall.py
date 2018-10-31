@@ -329,6 +329,10 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 	#mdp_user = 'password'
 	#taille_swap = '1024'
 
+	# La version de openbsd
+	version = '6.2'
+	versionSansPoint = version.replace(".", "")
+
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
 	ismac = re.compile(X).match(mac)
@@ -353,9 +357,7 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 	disklabel = mac + '-disklabel'
 	disklabelfile = '/var/www/html/openbsd/' + disklabel
 	
-	# La version de openbsd
-	version = '6.2'
-	versionSansPoint = version.replace(".", "")
+
 
 	# Puis on écrit le fichier réponse
 	with open(file, 'w') as fichier:
@@ -390,7 +392,7 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 	# Pour la conf agrégat on a besoin d'utiliser un set
 	# Pour l'instant on ne fait que copier, en renommant, un set déjà créer
 	nouv_set = 'site' + versionSansPoint + '-' + nom + '.tgz'
-	subprocess.run(['cp', 'site{}.tgz'.format(versionSansPoint), '/var/www/html/pub/OpenBSD/{}/amd64/{}'.format(version, nouv_set)])
+	subprocess.run(['cp', 'site62.tgz'.format(versionSansPoint), '/var/www/html/pub/OpenBSD/{}/amd64/{}'.format(version, nouv_set)])
 	
 	# Il faut mettre à jour le fichier index
 	cheminSet = '/var/www/html/pub/OpenBSD/{}/amd64/'.format(version)
