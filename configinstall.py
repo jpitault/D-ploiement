@@ -398,7 +398,7 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		
 		
 # fichier unattend windows server 2016
-def winunattend(mac, computername, mdp_admin, raid, ip):
+def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 	# On nettoie les disques 0 et 1 dans WinPE avec diskpart
 
 
@@ -418,7 +418,7 @@ def winunattend(mac, computername, mdp_admin, raid, ip):
 	serversamba = '10.10.75.2'
 	
 	# variables ?
-	productkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
+	#productkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
 	#computername = 'TestComputerName'
 	#mdp_admin = 'password'
 	regorg = 'castleit'
@@ -581,7 +581,7 @@ def winunattend(mac, computername, mdp_admin, raid, ip):
 
 		
 # fichier kickstart pour ESXi
-def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER):
+def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER, LICENSE_KEY):
 	# On veut une adresse MAC en minuscule, séparée par "-"
 	# On commence par séparer l'adresse MAC dans une list
 	listmac = re.findall('[a-fA-F0-9]{2}',mac)
@@ -591,7 +591,7 @@ def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER):
 	mac = mac.lower()
 
 	nom_preseed = '/var/www/html/' + mac + "esxi.cfg"
-
+	
 
 	# On écrit le fichier
 	with open(nom_preseed,'w') as fichier:
@@ -613,9 +613,10 @@ def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER):
 		fichier.write('# On met le clavier en français\n')
 		fichier.write("keyboard 'French'\n")
 		fichier.write('\n')
-		fichier.write('# Configure la licence, si non-inclus ESXi installe en mode évaluation\n')
-		fichier.write('#vmserialnum --esx=<license-key>\n')
-		fichier.write('\n')
+		if LICENSE_KEY != '':
+			fichier.write('# Configure la licence, si non-inclus ESXi installe en mode évaluation\n')
+			fichier.write('#vmserialnum --esx={}\n'.format(LICENSE_KEY))
+			fichier.write('\n')
 		fichier.write('# Set the network to DHCP on the first network adapter\n')
 		fichier.write('network --bootproto=dhcp --device=vmnic0\n')
 		fichier.write('#network --bootproto=static --addvmportgroup=0 --device=vmnic0 --ip=${IPADDR} --netmask=${NETMASK} --gateway=${GATEWAY} --nameserver=${DNS} --hostname=${HOSTNAME}\n')

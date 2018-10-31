@@ -28,10 +28,6 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 <host>
 	<MACadd>001122334455</MACadd>
 	<OS>debian</OS>
-	<!-- Si l'OS est windows, on peut mettre un sous-champ pour indiquer si on veut du soft raid -->
-	<!-- <OS>windows
-			<raid>raid</raid>
-		 </OS> -->
 	<IP>192.168.0.X</IP>
 	<NOM>hostname</NOM>
 	<MDP_ROOT>passwordroot</MDP_ROOT>
@@ -40,7 +36,22 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 	<SWAP>1024</SWAP>
 </host>
 ```
-
+Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID
+```xml
+<host>
+	<MACadd>001122334455</MACadd>
+	<OS>windows
+		<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY>
+		<RAID>raid</RAID>
+	</OS>
+	<IP>192.168.0.X</IP>
+	<NOM>hostname</NOM>
+	<MDP_ROOT>passwordroot</MDP_ROOT>
+	<NOM_USER>username</NOM_USER>
+	<MDP_USER>passworduser</MDP_USER>
+	<SWAP>1024</SWAP>
+</host>
+```
 Le nom des champs n'a pas d'importance mais leurs ordre doit être respecté.
 Le SWAP est en MO
 

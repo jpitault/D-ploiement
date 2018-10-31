@@ -88,16 +88,29 @@ def installxml(file):
 		# On attend un sous élément à OS si on veut du soft raid
 		# il faut que root[1][0].text == 'raid' pour que le fichier unattend installe le soft raid
 		try:
-			raid = root[1][0].text
+			raid = root[1][1].text
+			#raid = root.find('OS/RAID').text
 		except IndexError:
 			raid = 'pas de soft raid'
+		# On regarde si il y a un sous élément PRODUCTKEY, sinon on utilise la clé kms
+		try:
+			prodkey = root[1][0].text
+			#prodkey = root.find('OS/PRODUCTKEY').text
+		except IndexError:
+			prodkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxewindows(mac)
-		configinstall.winunattend(mac, nom, mdp_root, raid, ip)
+		configinstall.winunattend(mac, nom, mdp_root, raid, prodkey, ip)
 	elif os == 'esxi':
+		# On attend un sous élément à OS qui contiend la clé de licence
+		try:
+			license_key = root[1][0].text
+			#license_key = root.find('OS/PRODUCTKEY').text
+		except IndexError:
+			license_key = ''
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxeesxi(mac)
-		configinstall.esxi(mac, mdp_root, nom_user, mdp_user)
+		configinstall.esxi(mac, mdp_root, nom_user, mdp_user, license_key)
 	else:
 		print('OS non supporté. Quitte le script')
 		sys.exit()
