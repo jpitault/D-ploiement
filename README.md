@@ -143,5 +143,6 @@ suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'install
 
 ### Les autres
 
-Les autres scripts et ceux qui sont dans les dossiers ne servent pas au déploiement par API.
+Les autres scripts et ceux qui sont dans les dossiers ne servent pas au déploiement par API. Le dossier scriptpostinstall contient 
+des scripts shell pour référence.
 Ils ne sont pas à jour.
