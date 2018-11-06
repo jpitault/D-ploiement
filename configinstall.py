@@ -257,6 +257,7 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i partman-lvm/confirm boolean true \n')
 		fichier.write('d-i partman-lvm/confirm_nooverwrite boolean true \n')
 
+		fichier.write('d-i partman/confirm_write_new_label boolean true \n')
 		fichier.write('d-i partman/confirm boolean true \n')
 		fichier.write('d-i partman/confirm_nooverwrite boolean true \n')
 		

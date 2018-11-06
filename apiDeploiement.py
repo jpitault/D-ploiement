@@ -79,7 +79,7 @@ class Hosts(object):
 			with open(res_path, 'w') as fichier:
 				fichier.write(data)
 			# Location header pour la ressource
-			resp.location = '/host/' + name
+			resp.location = '/hosts/' + name
 			
 			# On exécute le script qui prépare l'intalle
 			ix.installxml(res_path)
