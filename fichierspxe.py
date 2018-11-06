@@ -165,7 +165,7 @@ def pxewindows(mac):
 	# On met en minuscule
 	mac = mac.lower()
 	
-	file = '/srv/tftp/windows/01-' + mac
+	file = '/srv/tftp/windows/pxelinux.cfg/01-' + mac
 	
 	with open(file, "w") as fichier:
 		fichier.write("default windows\n")
