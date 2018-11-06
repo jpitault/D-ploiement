@@ -1,10 +1,10 @@
 <host>
-	<MACadd>080027BFDE2A</MACadd>
-	<OS>debian</OS>
-	<IP>192.168.0.102</IP>
-	<NOM>xmldebian</NOM>
+	<MACadd>080027E73668</MACadd>
+	<OS>ubuntu</OS>
+	<IP>192.168.0.103</IP>
+	<NOM>xmlubuntu</NOM>
 	<MDP_ROOT>password</MDP_ROOT>
 	<NOM_USER>julian</NOM_USER>
 	<MDP_USER>password</MDP_USER>
-	<SWAP>512</SWAP>
+	<SWAP>1024</SWAP>
 </host>
