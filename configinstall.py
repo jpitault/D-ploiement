@@ -254,6 +254,7 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i partman-md/confirm boolean true \n')
 		fichier.write('d-i partman-md/confirm_nooverwrite  boolean true \n')		
 		fichier.write('d-i partman-lvm/device_remove_lvm boolean true \n')
+		fichier.write('d-i partman-lvm/device_remove_lvm_span boolean true \n')
 		fichier.write('d-i partman-lvm/confirm boolean true \n')
 		fichier.write('d-i partman-lvm/confirm_nooverwrite boolean true \n')
 
