@@ -192,7 +192,7 @@ chroot ${MNT} /tmp/installscript $@ 2>&1
 
 cat << EOF | chroot ${MNT} /bin/sh
 echo "${MDPROOT}" | pw usermod root -h 0
-echo "${MDPUSER}" | pw useradd -h 0 -n ${USER} -m
+echo "${MDPUSER}" | pw useradd -h 0 -n ${USER} -G wheel -m
 EOF
 
 umount "${MNT}/dev"
