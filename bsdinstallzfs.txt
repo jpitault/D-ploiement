@@ -2,7 +2,7 @@
 #variables
 ############################
 
-
+WEBSERVER="192.168.0.254"
 POOL="data"
 DEVS="/dev/ada0 /dev/ada1"
 SWAP=1G
@@ -182,7 +182,7 @@ cp /boot/zfs/zpool.cache ${MNT}/boot/zfs/
 
 cp /etc/resolv.conf ${MNT}/etc/resolv.conf
 
-fetch -o ${MNT}/tmp/installscript http://192.168.0.254/"${POSTINSTALL}"
+fetch -o ${MNT}/tmp/installscript http://"${WEBSERVER}"/"${POSTINSTALL}"
 
 chmod a+x ${MNT}/tmp/installscript
 
