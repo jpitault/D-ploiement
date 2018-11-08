@@ -241,7 +241,11 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i clock-setup/utc boolean true \n')
 		fichier.write('d-i time/zone string US/Eastern \n')
 		fichier.write('d-i clock-setup/ntp boolean true \n')
-				
+		fichier.write('d-i partman/early_command string vgs --separator=: --noheadings | cut -f1 -d: | while read vg ; do vgchange -an $vg ; done ;\\')
+		fichier.write('\npvs --separator=: --noheadings | cut -f1 -d: | while read pv ; do pvremove -ff -y $pv ; done ;\\')
+		fichier.write('\ncat /proc/mdstat | grep active | cut -f1 -d: | while read md ; do mdadm --stop /dev/$mds ; mdadm --remove /dev/$md ; done ;\\')
+		fichier.write('\nmdadm --zero-superblock /dev/sda ;\\')
+		fichier.write('\nmdadm --zero-superblock /dev/sdb \n')
 		fichier.write('d-i partman-auto/disk string /dev/sda /dev/sdb \n')
 		fichier.write('d-i partman-auto/method string raid \n')
 		fichier.write('d-i partman-auto/purge_lvm_from_device boolean true \n')
@@ -293,7 +297,8 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('\n           .')
 		fichier.write('\nd-i mdadm/boot_degraded boolean false \n')
 
-		fichier.write('tasksel tasksel/first multiselect standard, ssh-server \n')
+		fichier.write('tasksel tasksel/first multiselect ubuntu-server \n')
+		fichier.write('d-i pkgsel/include string openssh-server \n')
 		fichier.write('d-i grub-installer/only_debian boolean true \n')
 		fichier.write('d-i grub-installer/with_other_os boolean true \n')
 		fichier.write('d-i grub-installer/bootdev string /dev/sda /dev/sdb \n')
