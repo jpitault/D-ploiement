@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import re
+import os
 
 # On vérifie déjà si le content type est xml dans la méthode post
 
