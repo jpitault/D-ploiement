@@ -141,6 +141,14 @@ Le script bsdinstallzfs.txt est utilisé comme modèle par configinstall lors de
 
 suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'installation.
 
+### Variable à changer
+
+La variable du serveur web n'est pas centralisée. Il faut donc la modifier dans plusieurs scripts :
+ - configinstall.py
+ - fichierspxe.py
+ - bsdinstallzfs.txt
+
+ 
 ### Les autres
 
 Les autres scripts et ceux qui sont dans les dossiers ne servent pas au déploiement par API. Le dossier scriptpostinstall contient 
