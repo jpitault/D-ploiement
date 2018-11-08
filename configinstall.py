@@ -297,7 +297,7 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('\n           .')
 		fichier.write('\nd-i mdadm/boot_degraded boolean false \n')
 
-		fichier.write('tasksel tasksel/first multiselect standard, ubuntu-server \n')
+		fichier.write('tasksel tasksel/first multiselect standard \n')
 		fichier.write('d-i pkgsel/include string openssh-server build-essential \n')
 		fichier.write('d-i grub-installer/only_debian boolean true \n')
 		fichier.write('d-i grub-installer/with_other_os boolean true \n')
