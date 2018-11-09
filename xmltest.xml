@@ -1,8 +1,8 @@
 <host>
-	<MACadd>080027308D73</MACadd>
+	<MACadd>080027777777</MACadd>
 	<OS>ubuntu</OS>
-	<IP>192.168.0.100</IP>
-	<NOM>UbuntuSurCentos</NOM>
+	<IP>192.168.0.77</IP>
+	<NOM>TESTAPIMAC2</NOM>
 	<MDP_ROOT>password</MDP_ROOT>
 	<NOM_USER>julian</NOM_USER>
 	<MDP_USER>password</MDP_USER>
