@@ -158,7 +158,7 @@ def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
 	# On écrit le fichier
 	with open(nom_preseed,'w') as fichier:
 		fichier.write('install \n')
-		fichier.write('url --url http://mirror.centos.org/centos/7.5.1804/os/x86_64/ \n')
+		fichier.write('url --url http://mirror.centos.org/centos/7/os/x86_64/ \n')
 		fichier.write('lang en_US.UTF-8 \n')
 		fichier.write('keyboard --vckeymap=fr \n')
 		fichier.write('unsupported_hardware \n')
@@ -186,7 +186,7 @@ def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('services --enabled=NetworkManager,sshd \n')
 		fichier.write('reboot \n')
 		fichier.write('user --name={} --plaintext --password {} \n'.format(nom_user, mdp_user))
-		fichier.write('repo --name=base --baseurl=http://mirror.centos.org/centos/7.5.1804/os/x86_64/ \n')
+		fichier.write('repo --name=base --baseurl=http://mirror.centos.org/centos/7/os/x86_64/ \n')
 		fichier.write('%packages \n')
 		fichier.write('@Core \n')
 		fichier.write('wget \n')

@@ -55,7 +55,7 @@ TYPE=Bond
 BONDING_MASTER=yes
 ONBOOT=yes
 BOOTPROTO=dhcp
-BONDING_OPTS="mode=4 miimon=100
+BONDING_OPTS="mode=4 miimon=100"
 EOF
 
 # Maintenant on indique à Network Manager de recharger les fichiers
