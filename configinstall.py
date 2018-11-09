@@ -243,6 +243,8 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i clock-setup/utc boolean true \n')
 		fichier.write('d-i time/zone string US/Eastern \n')
 		fichier.write('d-i clock-setup/ntp boolean true \n')
+		# On nettoie les disques de façon à enlever les traces de LVM et soft raid,
+		# Car sinon Ubuntu refuse de s'installer sur des disques qui en contenaient (Ubuntu, Debian, CentOS)
 		fichier.write('d-i partman/early_command string vgs --separator=: --noheadings | cut -f1 -d: | while read vg ; do vgchange -an $vg ; done ;\\')
 		fichier.write('\npvs --separator=: --noheadings | cut -f1 -d: | while read pv ; do pvremove -ff -y $pv ; done ;\\')
 		fichier.write('\ncat /proc/mdstat | grep active | cut -f1 -d: | while read md ; do mdadm --stop /dev/$md ; mdadm --remove /dev/$md ; done ;\\')
