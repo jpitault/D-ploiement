@@ -143,10 +143,10 @@ suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'install
 
 ### Variable à changer
 
-La variable du serveur web n'est pas centralisée. Il faut donc la modifier dans plusieurs scripts :
- - configinstall.py
+Le fichier varconfig.py contient une variable, celle du serveur web. Elle est appelée dans les scripts :
  - fichierspxe.py
- - bsdinstallzfs.txt
+ - configinstall.py
+
 
  
 ### Les autres

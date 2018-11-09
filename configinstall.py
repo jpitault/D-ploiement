@@ -34,7 +34,7 @@ def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 	# On lit le modèle et on écrit dans la sortie
 	with open(modele,"r") as in_f, open(outfile,"w") as out_f:
 		# On écrit la variable qui contient l'IP du serveur web
-		out_f.write('WEBSERVER="{}"'.format(server))
+		out_f.write('WEBSERVER="{}"\n'.format(server))
 		# On lit, ligne par ligne
 		for ligne in in_f.readlines():
 			if 'SWAP=1G' in ligne:
