@@ -349,7 +349,7 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 	#taille_swap = '1024'
 
 	# La version de openbsd
-	version = '6.2'
+	version = varconfig.versionOpenBSD
 	versionSansPoint = version.replace(".", "")
 
 	# On vérifie que l'adresse MAC en soit bien une

@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 import xml.etree.ElementTree as ET
+import varconfig
 
 
 """ Script qui supprime tous les fichiers qui ont été crées à l'ajout d'un hôte.
@@ -122,8 +123,10 @@ def menageconf(mac, nom, osinstall, ip):
 						pass
 					
 		# supprime archive site62-nom.tgz
-		distrib = 'pub/OpenBSD/6.2/amd64/'
-		archive = serveurweb + distrib + 'site62-' + nom + '.tgz'
+		version = varconfig.versionOpenBSD
+		versionSansPoint = version.replace(".", "")
+		distrib = 'pub/OpenBSD/{}/amd64/'.format(version)
+		archive = serveurweb + distrib + 'site-{}'.format(versionSansPoint) + nom + '.tgz'
 		try:
 			os.remove(archive)
 		except OSError as  e:

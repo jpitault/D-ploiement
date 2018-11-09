@@ -130,7 +130,7 @@ Scripts nécessaires pour l'ajout d'un host :
    - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml
 
 Ils assument :
- - Que la conf du DHCP est à /etc/dhcp
+ - Que la conf du DHCP se trouve dans le dossier /etc/dhcp
  - Le serveur TFTP a pour racine /srv/tftp/ et qu'il utilise ensuite un dossier pour chaque OS
  - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle
  
@@ -143,10 +143,12 @@ suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'install
 
 ### Variable à changer
 
-Le fichier varconfig.py contient une variable, celle du serveur web. Elle est appelée dans les scripts :
+Le fichier varconfig.py contient une variable, celle de l'ip du serveur web. Elle est appelée dans les scripts :
  - fichierspxe.py
  - configinstall.py
-
+Et la version de OpenBSD, appelée dans :
+ - configinstall.py
+ - suppressionhote.py
 
  
 ### Les autres
