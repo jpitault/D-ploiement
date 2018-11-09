@@ -245,7 +245,7 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i clock-setup/ntp boolean true \n')
 		fichier.write('d-i partman/early_command string vgs --separator=: --noheadings | cut -f1 -d: | while read vg ; do vgchange -an $vg ; done ;\\')
 		fichier.write('\npvs --separator=: --noheadings | cut -f1 -d: | while read pv ; do pvremove -ff -y $pv ; done ;\\')
-		fichier.write('\ncat /proc/mdstat | grep active | cut -f1 -d: | while read md ; do mdadm --stop /dev/$mds ; mdadm --remove /dev/$md ; done ;\\')
+		fichier.write('\ncat /proc/mdstat | grep active | cut -f1 -d: | while read md ; do mdadm --stop /dev/$md ; mdadm --remove /dev/$md ; done ;\\')
 		fichier.write('\nmdadm --zero-superblock /dev/sda ;\\')
 		fichier.write('\nmdadm --zero-superblock /dev/sdb \n')
 		fichier.write('d-i partman-auto/disk string /dev/sda /dev/sdb \n')

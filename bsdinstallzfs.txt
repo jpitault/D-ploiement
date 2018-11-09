@@ -145,10 +145,10 @@ echo 'zfs_enable="YES"' >> $MNT/etc/rc.conf
 #Parametres perso
 ##############################
 echo 'if_lagg_load=YES' >> ${MNT}/boot/loader.conf
-echo "ifconfig_${PRIMARY_NIC}=up" >> ${MNT}/etc/rc.conf
-echo "ifconfig_${SECONDART_NIC}=up" >> ${MNT}/etc/rc.conf
+echo "ifconfig_${PRIMARY_NIC}=\"up mtu 9000\"" >> ${MNT}/etc/rc.conf
+echo "ifconfig_${SECONDART_NIC}=\"up mtu 9000\"" >> ${MNT}/etc/rc.conf
 echo "cloned_interfaces=${LAGG_NIC}" >> ${MNT}/etc/rc.conf
-echo "ifconfig_${LAGG_NIC}=\"laggproto ${LAGG_CONF} laggport ${PRIMARY_NIC} laggport ${SECONDART_NIC} ${LAGG_NETWORK}\"" >> ${MNT}/etc/rc.conf
+echo "ifconfig_${LAGG_NIC}=\"laggproto ${LAGG_CONF} laggport ${PRIMARY_NIC} laggport ${SECONDART_NIC} ${LAGG_NETWORK} mtu 9000\"" >> ${MNT}/etc/rc.conf
 
 
 echo 'keymap=fr.kbd' >> ${MNT}/etc/rc.conf
