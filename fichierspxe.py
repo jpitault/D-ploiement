@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 import re
 import sys
+import varconfig
 
 # Scripts pour créer fichiers pxe
 
-server = "192.168.0.254"
+server = varconfig.ipserveurweb
 
 def pxefreebsd(mac):
 	# Pour freebsd pas vraiment besoin de variables

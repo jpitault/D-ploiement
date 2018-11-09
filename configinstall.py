@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 import re
 import subprocess
+import varconfig
 
 # On écrit le script d'installation de bsd, en partant du modèle et en changeant les variables
 # Il faut que le script de sortie s'appelle : mac-00:11:22:33:44:aa ( définit dans l'image mfsbsd)
 
-server = '192.168.0.254'
+server = varconfig.ipserveurweb
 def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
@@ -32,6 +33,8 @@ def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 
 	# On lit le modèle et on écrit dans la sortie
 	with open(modele,"r") as in_f, open(outfile,"w") as out_f:
+		# On écrit la variable qui contient l'IP du serveur web
+		out_f.write('WEBSERVER="{}"'.format(server))
 		# On lit, ligne par ligne
 		for ligne in in_f.readlines():
 			if 'SWAP=1G' in ligne:

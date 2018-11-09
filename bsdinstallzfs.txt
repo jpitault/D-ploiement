@@ -2,7 +2,7 @@
 #variables
 ############################
 
-WEBSERVER="192.168.0.254"
+#WEBSERVER="192.168.0.254"
 POOL="data"
 DEVS="/dev/ada0 /dev/ada1"
 SWAP=1G
