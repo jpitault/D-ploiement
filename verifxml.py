@@ -6,6 +6,22 @@ import os
 
 # On veut vérifier que le xml comprend 8 champs au premier niveau
 
+"""
+Le fichier xml doit correspondre au modèle 
+<host>
+	<MACadd>080027777777</MACadd>
+	<OS>ubuntu</OS>
+	<IP>192.168.0.77</IP>
+	<NOM>TESTAPIMAC2</NOM>
+	<MDP_ROOT>password</MDP_ROOT>
+	<NOM_USER>julian</NOM_USER>
+	<MDP_USER>password</MDP_USER>
+	<SWAP>1024</SWAP>
+</host>
+
+"""
+
+
 def xml_taille(xml):
 	#tree = ET.parse(xml)
 	#root = tree.getroot()
@@ -70,6 +86,29 @@ def xml_nom(xml):
 	list = os.listdir(path='/etc/dhcp')
 	assert not (nom in list)
 	
+"""
+ESXi ne s'installe pas si le mot de passe définit n'atteint pas une certaine complexité.
+Il faut 7 caractères et que ces caractères proviennent d'au moins 3 classes différentes, plus :
+The password policy in ESXi 6 has following requirements:
+Passwords must contain characters from at least three character classes.
+Passwords containing characters from three character classes must be at least seven characters long.
+Passwords containing characters from all four character classes must be at least seven characters long.
+An uppercase character that begins a password does not count toward the number of character classes used.
+A number that ends a password does not count toward the number of character classes used.
+
+Regex tentative : 
+^(^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*#?&])|^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])|^(?!\D+\d$)(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&]))[A-Za-z\d@$!%*?&]{7,}$
+
+"""
+def xml_password(xml):
+	# Regex qui vérifie que le mot de passe sera accepté par ESXi
+	esxiReq = '^(^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*#?&])|^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])|^(?!\D+\d$)(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&]))[A-Za-z\d@$!%*?&]{7,}$'
+	# On regarde le mdp de root
+	root = ET.fromstring(xml)
+	mdp_root = root[4].text
+	#mdp_root = root.find('MDP_ROOT').text
+	esxiValide = re.compile(esxiReq).match(mdp_root)
+	assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
 
 # On rassemble le tout
 def validationxml(xml):
@@ -100,6 +139,14 @@ def validationxml(xml):
 				xml_nom(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques '_' et '-' sont autorisés"
+			osinstall = root[1].text
+			#osinstall = root.find('OS').text
+			osinstall = osinstall.lower()
+			if osinstall == 'esxi':
+				try:
+					xml_password(xml)
+				except AssertionError:
+					errors = errors + '\n' + "Le mot de passe root ne répond pas aux exigences d'ESXi"
 	
 	return errors
 
