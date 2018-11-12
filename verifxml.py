@@ -34,7 +34,8 @@ def xml_mac(xml):
 	#tree = ET.parse(xml)
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
-	X='([a-fA-F0-9]{2}[:|\-]?){6}'
+	#X='([a-fA-F0-9]{2}[:|\-]?){6}'
+	X='^([a-fA-F0-9]{2})([:|\-]?[a-fA-F0-9]{2}){5}$'
 	mac = root[0].text
 	#mac = root.find('MACadd').text
 	estunemac = re.compile(X).match(mac)
@@ -49,11 +50,12 @@ def xml_ip(xml):
 	#tree = ET.parse(xml)
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
-	X = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}'
+	X = '^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$'
 	ValidIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+	ipRFC1918 = '^(((^127\.)|(^10\.))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.|(^192\.168\.)|((^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
 	ip = root[2].text
 	#ip = root.find('IP').text
-	estuneip = re.compile(X).match(ip)
+	estuneip = re.compile(ipRFC1918).match(ip)
 	assert (estuneip), "Le champ 2 n'est pas une IP"
 
 	
