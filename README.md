@@ -37,7 +37,7 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 </host>
 ```
 Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID.
-Il ne faut pas qu'il y ai d'espaces ou de retour à la ligne entre le nom de l'OS et un sous-élément.
+Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'OS et un sous-élément.
 ```xml
 <host>
 	<MACadd>001122334455</MACadd>
