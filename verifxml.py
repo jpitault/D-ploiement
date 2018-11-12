@@ -88,6 +88,19 @@ def xml_nom(xml):
 	list = os.listdir(path='/etc/dhcp')
 	assert not (nom in list)
 	
+	
+
+# Check sur le champ username	
+def xml_username(xml):
+	# On veut pas d'espaces dans le nom d'utilisateur
+	root = ET.fromstring(xml)
+	username = root[5].text
+	#username = root.find('NOM_USER').text
+	X = '[^a-zA-Z0-9_:-]'
+	assert not (re.search(X, username))
+	
+	
+	
 """
 ESXi ne s'installe pas si le mot de passe définit n'atteint pas une certaine complexité.
 Il faut 7 caractères et que ces caractères proviennent d'au moins 3 classes différentes, plus :
@@ -140,7 +153,11 @@ def validationxml(xml):
 			try:
 				xml_nom(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques '_' et '-' sont autorisés"
+				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques, '_' et '-' sont autorisés"
+			try:
+				xml_username(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ 5 ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés" 
 			osinstall = root[1].text
 			#osinstall = root.find('OS').text
 			osinstall = osinstall.lower()

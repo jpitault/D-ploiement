@@ -1,7 +1,7 @@
 <host>
 	<MACadd>080027777779</MACadd>
 	<OS>esxi</OS>
-	<IP>192.168.0.792</IP>
+	<IP>192.167.0.92</IP>
 	<NOM>TestMDP</NOM>
 	<MDP_ROOT>password</MDP_ROOT>
 	<NOM_USER>julian</NOM_USER>
