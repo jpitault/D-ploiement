@@ -441,7 +441,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 	# fichier de sortie
 	filemac = '/samba/winserv2016/' + mac + '.xml'
 	
-	serversamba = '10.10.75.2'
+	#serversamba = '10.10.75.2'
 	
 	# variables ?
 	#productkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
@@ -483,7 +483,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 		# Si l'option raid est présente on crée un software RAID1
 		if raid == 'raid':
 			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-			fichier.write('                    <CommandLine>net use N: \\{}\public /user:user pass</CommandLine> \n'.format(serversamba))
+			fichier.write('                    <CommandLine>net use N: \\{}\public /user:user pass</CommandLine> \n'.format(server))
 			fichier.write('                    <Description>Mappe le lecteur</Description> \n')
 			fichier.write('                    <Order>1</Order> \n')
 			fichier.write('                </SynchronousCommand> \n')
