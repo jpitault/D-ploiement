@@ -87,7 +87,7 @@ def xml_nom(xml):
 		X = '^[a-zA-Z0-9_-]{1,15}$'
 	else:
 		X = '^[a-zA-Z0-9_:-]+$'
-	nomvalide = re.compile(X).match(nom)
+	nomvalide = re.compile(X).match(username)
 	assert (nomvalide)
 	"""FACON ALAMBIQUE
 	X = '[^a-zA-Z0-9_:-]'
@@ -163,11 +163,11 @@ def validationxml(xml):
 			try:
 				xml_nom(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques, '_' et '-' sont autorisés"
+				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques, '_' et '-' sont autorisés. Windows nécessite moins de 15 caractères."
 			try:
 				xml_username(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 5 ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés" 
+				errors = errors + '\n' + "Le champ 5 ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés." 
 			osinstall = root[1].text
 			#osinstall = root.find('OS').text
 			osinstall = osinstall.lower()
