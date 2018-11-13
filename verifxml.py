@@ -87,7 +87,7 @@ def xml_nom(xml):
 		X = '^[a-zA-Z0-9_-]{1,15}$'
 	else:
 		X = '^[a-zA-Z0-9_:-]+$'
-	nomvalide = re.compile(X).match(username)
+	nomvalide = re.compile(X).match(nom)
 	assert (nomvalide)
 	"""FACON ALAMBIQUE
 	X = '[^a-zA-Z0-9_:-]'
@@ -106,7 +106,7 @@ def xml_username(xml):
 	username = root[5].text
 	#username = root.find('NOM_USER').text
 	X = '^[a-zA-Z0-9_:-]+$'
-	usernameValide = re.compile(X).match(nom)
+	usernameValide = re.compile(X).match(username)
 	assert (usernameValide)
 	
 	
