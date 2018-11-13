@@ -36,12 +36,12 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 	<SWAP>1024</SWAP>
 </host>
 ```
-Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID.
+Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID et exécuter un script.
 Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'OS et un sous-élément.
 ```xml
 <host>
 	<MACadd>001122334455</MACadd>
-	<OS>windows<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY><RAID>raid</RAID>
+	<OS>windows<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY><RAID>raid</RAID><SCRIPT>scriptpowershell.ps1</SCRIPT>
 	</OS>
 	<IP>192.168.0.X</IP>
 	<NOM>hostname</NOM>
@@ -52,9 +52,9 @@ Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'
 </host>
 ```
 Le nom des champs n'a pas d'importance mais leurs ordre doit être respecté.
-Le SWAP est en MO
+Le SWAP est en MO.
 
-Quand elle reçoit une requête POST, elle vérifie que le header content-type = application/xml
+Quand elle reçoit une requête POST, elle vérifie que le header content-type = application/xml.
 
 
 ### Sur /hosts
@@ -75,7 +75,10 @@ Puis elle utilise un script qui vérifie le contenue du xml :
  - 8 champs présents sous la racine
  - Le premier champ contient quelque chose qui a le format d'une adresse MAC, séparée par des ":", des "-" ou rien du tout
  - Le deuxième champ contient le nom d'un OS supporté
- - Le troisième champ contient une adresse IP
+ - Le troisième champ contient une adresse IP locale (RFC1918)
+ - Le quatrième champ contient un nom dans lequel il n'y a que des caractères acceptés (alphanumériques, "-", "_" et ":"). Et pour Windows si le nom contient moins de 15 caractères.
+ - Si on essaie d'installer ESXi, que le cinquième champ contient un mot de passe qui vérifie les demandes d'ESXi.
+ - Le sixième champ contient un nom d'utilisateur, fait de caractères alphanumériques et sans espaces.
 
 Elle renvoie une erreur 415 si une de ces conditions n'est pas respecté.
 Sinon elle crée sur le serveur le fichier xml reçu et lance avec lui comme argument, le script qui crée les fichiers de conf
