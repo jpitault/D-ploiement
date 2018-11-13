@@ -82,8 +82,17 @@ def xml_nom(xml):
 	root = ET.fromstring(xml)
 	nom = root[3].text
 	#nom = root.find('NOM').text
+	# Windows n'accepte pas les noms de plus de 15 caractères
+	if root.find('OS').text.lower() == 'windows':
+		X = '^[a-zA-Z0-9_-]{1,15}$'
+	else:
+		X = '^[a-zA-Z0-9_:-]+$'
+	nomvalide = re.compile(X).match(nom)
+	assert (nomvalide)
+	"""FACON ALAMBIQUE
 	X = '[^a-zA-Z0-9_:-]'
 	assert not (re.search(X, nom))
+	"""
 	# On ne veut pas que le nom soit déjà utilisé non plus
 	list = os.listdir(path='/etc/dhcp')
 	assert not (nom in list)
@@ -96,8 +105,9 @@ def xml_username(xml):
 	root = ET.fromstring(xml)
 	username = root[5].text
 	#username = root.find('NOM_USER').text
-	X = '[^a-zA-Z0-9_:-]'
-	assert not (re.search(X, username))
+	X = '^[a-zA-Z0-9_:-]+$'
+	usernameValide = re.compile(X).match(nom)
+	assert (usernameValide)
 	
 	
 	
