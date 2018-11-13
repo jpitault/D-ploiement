@@ -100,9 +100,16 @@ def installxml(file):
 		#except IndexError:
 		except AttributeError:
 			prodkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
+		# il faut que le sous-élément SCRIPT existe pour que le fichier unattend exécute le script
+		try:
+			#scriptPs = root[1][2].text
+			scriptPs = root.find('OS/SCRIPT').text
+		#except IndexError:
+		except AttributeError:
+			scriptPs = 'PasDeScript'
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxewindows(mac)
-		configinstall.winunattend(mac, nom, mdp_root, raid, prodkey, ip)
+		configinstall.winunattend(mac, nom, mdp_root, raid, prodkey, ip, scriptPs)
 	elif os == 'esxi':
 		# On attend un sous élément à OS qui contiend la clé de licence
 		try:

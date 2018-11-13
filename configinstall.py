@@ -424,7 +424,7 @@ def openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap):
 		
 		
 # fichier unattend windows server 2016
-def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
+def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 	# On nettoie les disques 0 et 1 dans WinPE avec diskpart
 
 
@@ -448,7 +448,8 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 	#computername = 'TestComputerName'
 	#mdp_admin = 'password'
 	regorg = 'castleit'
-	regown = 'castleit'
+	regown = 'propriétaire'
+	#script = 'powershelltest.ps1'
 	
 
 	with open(fileip , 'w') as fichier:	
@@ -483,7 +484,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 		# Si l'option raid est présente on crée un software RAID1
 		if raid == 'raid':
 			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-			fichier.write('                    <CommandLine>net use N: \\{}\public /user:user pass</CommandLine> \n'.format(server))
+			fichier.write('                    <CommandLine>cmd /c \"net use N: \\{}\public /user:user pass\"</CommandLine> \n'.format(server))
 			fichier.write('                    <Description>Mappe le lecteur</Description> \n')
 			fichier.write('                    <Order>1</Order> \n')
 			fichier.write('                </SynchronousCommand> \n')
@@ -504,9 +505,27 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip):
 			fichier.write('                    <Order>2</Order> \n')
 			fichier.write('                </SynchronousCommand> \n')
 			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-			fichier.write('                    <CommandLine>net use N: /delete</CommandLine> \n')
+			fichier.write('                    <CommandLine>cmd /c \"net use N: /delete\"</CommandLine> \n')
 			fichier.write('                    <Description>Supprimer le mappage</Description> \n')
 			fichier.write('                    <Order>3</Order> \n')
+			fichier.write('                </SynchronousCommand>				 \n')
+			
+		# Si un script est indiqué on le télécharge et l'exécute	
+		if script != 'PasDeScript' :
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>PowerShell -Command "(NewObject System.Net.WebClient).DownloadFile(\"http://{}/{}\", \"C:\Users\Default\Desktop\script.ps1\")"</CommandLine> \n'.format(server, script)
+			fichier.write('                    <Description>Télécharge script</Description> \n')
+			fichier.write('                    <Order>4</Order> \n')
+			fichier.write('                </SynchronousCommand>				 \n')
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>PowerShell -Command "C:\Users\Default\Desktop\script.ps1"</CommandLine> \n')
+			fichier.write('                    <Description>Exécute script</Description> \n')
+			fichier.write('                    <Order>5</Order> \n')
+			fichier.write('                </SynchronousCommand>				 \n')
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>PowerShell -Command "Remove-Item -path C:\Users\Default\Desktop\script.ps1"</CommandLine> \n')
+			fichier.write('                    <Description>Supprime script</Description> \n')
+			fichier.write('                    <Order>6</Order> \n')
 			fichier.write('                </SynchronousCommand>				 \n')
 			
 		fichier.write('            </FirstLogonCommands>             \n')
