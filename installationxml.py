@@ -88,15 +88,17 @@ def installxml(file):
 		# On attend un sous élément à OS si on veut du soft raid
 		# il faut que root[1][0].text == 'raid' pour que le fichier unattend installe le soft raid
 		try:
-			raid = root[1][1].text
-			#raid = root.find('OS/RAID').text
-		except IndexError:
+			#raid = root[1][1].text
+			raid = root.find('OS/RAID').text
+		#except IndexError:
+		except AttributeError:
 			raid = 'pas de soft raid'
 		# On regarde si il y a un sous élément PRODUCTKEY, sinon on utilise la clé kms
 		try:
-			prodkey = root[1][0].text
-			#prodkey = root.find('OS/PRODUCTKEY').text
-		except IndexError:
+			#prodkey = root[1][0].text
+			prodkey = root.find('OS/PRODUCTKEY').text
+		#except IndexError:
+		except AttributeError:
 			prodkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxewindows(mac)
