@@ -513,7 +513,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 		# Si un script est indiqué on le télécharge et l'exécute	
 		if script != 'PasDeScript' :
 			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-			fichier.write('                    <CommandLine>PowerShell -Command "(NewObject System.Net.WebClient).DownloadFile(\'http://{}/{}\', \'C:\\Users\\Default\\Desktop\\script.ps1\')"</CommandLine> \n'.format(server, script))
+			fichier.write('                    <CommandLine>PowerShell -Command "(New-Object System.Net.WebClient).DownloadFile(\'http://{}/{}\', \'C:\\Users\\Default\\Desktop\\script.ps1\')"</CommandLine> \n'.format(server, script))
 			fichier.write('                    <Description>Télécharge script</Description> \n')
 			fichier.write('                    <Order>4</Order> \n')
 			fichier.write('                </SynchronousCommand>				 \n')
