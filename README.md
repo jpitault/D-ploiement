@@ -146,7 +146,7 @@ suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'install
 
 ### Variable à changer
 
-Le fichier varconfig.py contient une variable, celle de l'ip du serveur web. Elle est appelée dans les scripts :
+Le fichier varconfig.py contient plusieurs variables, celle de l'ip du serveur web, de la gateway et du DNS. Elle est appelée dans les scripts :
  - fichierspxe.py
  - configinstall.py
 Et la version de OpenBSD, appelée dans :
