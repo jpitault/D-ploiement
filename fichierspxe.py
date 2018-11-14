@@ -177,7 +177,7 @@ def pxewindows(mac):
 		fichier.write("  KERNEL memdisk\n")
 		# On peut utiliser l'IP où la MAC pour différencier le fichier réponse
 		#fichier.write("  INITRD winpe_amd64_MAC.iso\n")
-		fichier.write("  INITRD winpe_amd64_IP.iso\n")
+		fichier.write("  INITRD winpe_amd64-IP-sansprompt.iso\n")
 		fichier.write("  APPEND iso raw")
 		
 		
