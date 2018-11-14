@@ -7,6 +7,10 @@ import varconfig
 # Il faut que le script de sortie s'appelle : mac-00:11:22:33:44:aa ( définit dans l'image mfsbsd)
 
 server = varconfig.ipserveurweb
+gateway = varconfig.ipgateway
+dns = varconfig.ipdns
+
+
 def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
@@ -479,6 +483,18 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 		fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name \'bond0\' -TeamMembers \'Ethernet\',\'Ethernet 2\' -TeamingMode SwitchIndependent -LoadBalancingAlgorithm TransportPorts -Confirm:$false"</CommandLine> \n')
 		fichier.write('                    <Description>Active le teaming</Description> \n')
 		fichier.write('                    <Order>9</Order> \n')
+		fichier.write('                </SynchronousCommand> \n')
+		
+		# Mettre une config réseau statique
+		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+		fichier.write('                    <CommandLine>PowerShell -Command "New-NetIPAddress –InterfaceAlias \'bond0\' –IPAddress \'{}\' –PrefixLength 24 -DefaultGateway {}"</CommandLine> \n'.format(ip, gateway)
+		fichier.write('                    <Description>Active le teaming</Description> \n')
+		fichier.write('                    <Order>10</Order> \n')
+		fichier.write('                </SynchronousCommand> \n')
+		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+		fichier.write('                    <CommandLine>PowerShell -Command "Set-DnsClientServerAddress -InterfaceAlias \'bond0\' -ServerAddresses {}"</CommandLine> \n'.format(dns))
+		fichier.write('                    <Description>Active le teaming</Description> \n')
+		fichier.write('                    <Order>11</Order> \n')
 		fichier.write('                </SynchronousCommand> \n')
 		
 		# Si l'option raid est présente on crée un software RAID1
