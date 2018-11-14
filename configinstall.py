@@ -487,7 +487,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 		
 		# Mettre une config réseau statique
 		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-		fichier.write('                    <CommandLine>PowerShell -Command "New-NetIPAddress –InterfaceAlias \'bond0\' –IPAddress \'{}\' –PrefixLength 24 -DefaultGateway {}"</CommandLine> \n'.format(ip, gateway)
+		fichier.write('                    <CommandLine>PowerShell -Command "New-NetIPAddress –InterfaceAlias \'bond0\' –IPAddress \'{}\' –PrefixLength 24 -DefaultGateway {}"</CommandLine> \n'.format(ip, gateway))
 		fichier.write('                    <Description>Active le teaming</Description> \n')
 		fichier.write('                    <Order>10</Order> \n')
 		fichier.write('                </SynchronousCommand> \n')
