@@ -168,5 +168,9 @@ def menagexml(file):
 	osinstall = root[1].text
 	nom = root[3].text
 	ip = root[2].text
+	# mac = root.find('MACadd').text
+	# osinstall = root.find('OS').text
+	# nom = root.find('NOM').text
+	# ip = root.find('IP').text
 	
 	menage(mac, nom, osinstall, ip)
