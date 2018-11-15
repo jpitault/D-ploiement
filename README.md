@@ -36,11 +36,12 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 	<SWAP>1024</SWAP>
 </host>
 ```
-Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID et exécuter un script.
+Pour Windows et ESXi, on peut ajouter des sous-éléments à OS. Pour indiquer la clé de produit et pour Windows si on veut du software RAID,
+la seconde adresse MAC pour l'agrégat et exécuter un script.
 Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'OS et un sous-élément.
 ```xml
 <host>
-	<MACadd>001122334455</MACadd>
+	<MACadd>001122334455<MACadd2>998877665544</MACadd2></MACadd>
 	<OS>windows<PRODUCTKEY>AAAA-BBBB-DDDD</PRODUCTKEY><RAID>raid</RAID><SCRIPT>scriptpowershell.ps1</SCRIPT>
 	</OS>
 	<IP>192.168.0.X</IP>
