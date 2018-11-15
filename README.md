@@ -51,7 +51,8 @@ Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'
 	<SWAP>1024</SWAP>
 </host>
 ```
-Le nom des champs n'a pas d'importance mais leurs ordre doit être respecté.
+Il y avait un mix, où certaines fonctions ne regardait que le nom du champ et d'autres, sa position relative aux autres. 
+Normalement, toutes les fonctions ne regarde que le nom du champ désormais.
 Le SWAP est en MO.
 
 Quand elle reçoit une requête POST, elle vérifie que le header content-type = application/xml.

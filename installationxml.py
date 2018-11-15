@@ -15,25 +15,25 @@ def installxml(file):
 	# Installation d'une machine
 
 	# Variables
-	mac = root[0].text
-	os = root[1].text
-	ip = root[2].text
-	nom = root[3].text
+	# mac = root[0].text
+	# os = root[1].text
+	# ip = root[2].text
+	# nom = root[3].text
 	#file = "/etc/dhcp/"+nom
-	mdp_root = root[4].text
-	nom_user = root[5].text
-	mdp_user = root[6].text
-	taille_swap = root[7].text
+	# mdp_root = root[4].text
+	# nom_user = root[5].text
+	# mdp_user = root[6].text
+	# taille_swap = root[7].text
 	
 	# Sinon avec le nom des champs fixe
-	# mac = root.find('MACadd').text
-	# os = root.find('OS').text
-	# ip = root.find('IP').text
-	# nom = root.find('NOM').text
-	# mdp_root = root.find('MDP_ROOT').text
-	# nom_user = root.find('NOM_USER').text
-	# mdp_user = root.find('MDP_USER').text
-	# taille_swap = root.find('SWAP').text
+	mac = root.find('MACadd').text
+	os = root.find('OS').text
+	ip = root.find('IP').text
+	nom = root.find('NOM').text
+	mdp_root = root.find('MDP_ROOT').text
+	nom_user = root.find('NOM_USER').text
+	mdp_user = root.find('MDP_USER').text
+	taille_swap = root.find('SWAP').text
 
 	# On met le nom de l'OS en minuscules
 	os = os.lower()
@@ -113,8 +113,8 @@ def installxml(file):
 	elif os == 'esxi':
 		# On attend un sous élément à OS qui contiend la clé de licence
 		try:
-			license_key = root[1][0].text
-			#license_key = root.find('OS/PRODUCTKEY').text
+			# license_key = root[1][0].text
+			license_key = root.find('OS/PRODUCTKEY').text
 		except IndexError:
 			license_key = ''
 		ajouterhost.ajouterhost(mac, os, ip, nom)

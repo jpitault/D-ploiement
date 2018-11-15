@@ -133,10 +133,10 @@ class UsedIP(object):
 			name_path = os.path.join(self._storage_path, file)
 			tree = ET.parse(name_path)
 			root = tree.getroot()
-			nom = root[3].text
-			#nom = root.find("NOM").text
-			ip = root[2].text
-			#ip = root.find("IP").text
+			#nom = root[3].text
+			nom = root.find("NOM").text
+			#ip = root[2].text
+			ip = root.find("IP").text
 			tempbody = tempbody + nom + '	:	' + ip + '\n'
 		resp.body = tempbody
 		resp.content_type = falcon.MEDIA_TEXT

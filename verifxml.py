@@ -36,8 +36,8 @@ def xml_mac(xml):
 	root = ET.fromstring(xml)
 	#X='([a-fA-F0-9]{2}[:|\-]?){6}'
 	X='^([a-fA-F0-9]{2})([:|\-]?[a-fA-F0-9]{2}){5}$'
-	mac = root[0].text
-	#mac = root.find('MACadd').text
+	#mac = root[0].text
+	mac = root.find('MACadd').text
 	estunemac = re.compile(X).match(mac)
 	
 	assert (estunemac), "Le champ 0 n'est pas une mac"
@@ -53,8 +53,8 @@ def xml_ip(xml):
 	X = '^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$'
 	ValidIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 	ipRFC1918 = '^(((^127\.)|(^10\.))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.|(^192\.168\.)|((^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
-	ip = root[2].text
-	#ip = root.find('IP').text
+	# ip = root[2].text
+	ip = root.find('IP').text
 	estuneip = re.compile(ipRFC1918).match(ip)
 	assert (estuneip), "Le champ 2 n'est pas une IP"
 
@@ -65,8 +65,8 @@ def xml_os(xml):
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
 	osSupport = ['debian','ubuntu','centos','proxmox','freebsd','openbsd','windows','esxi']
-	osinstall = root[1].text
-	#osinstall = root.find('OS').text
+	# osinstall = root[1].text
+	osinstall = root.find('OS').text
 	osinstall = osinstall.lower()
 	# containOs = 0
 	# for o in osSupport:
@@ -80,8 +80,8 @@ def xml_os(xml):
 def xml_nom(xml):
 	# On ne veut pas d'espaces dans le nom qui servira de hostname
 	root = ET.fromstring(xml)
-	nom = root[3].text
-	#nom = root.find('NOM').text
+	# nom = root[3].text
+	nom = root.find('NOM').text
 	# Windows n'accepte pas les noms de plus de 15 caractères
 	if root.find('OS').text.lower() == 'windows':
 		X = '^[a-zA-Z0-9_-]{1,15}$'
@@ -103,8 +103,8 @@ def xml_nom(xml):
 def xml_username(xml):
 	# On veut pas d'espaces dans le nom d'utilisateur
 	root = ET.fromstring(xml)
-	username = root[5].text
-	#username = root.find('NOM_USER').text
+	# username = root[5].text
+	username = root.find('NOM_USER').text
 	X = '^[a-zA-Z0-9_:-]+$'
 	usernameValide = re.compile(X).match(username)
 	assert (usernameValide)
@@ -130,8 +130,8 @@ def xml_password(xml):
 	esxiReq = '^(^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*#?&])|^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*?&]{7,}$)(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])|^(?!\D+\d$)(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&]))[A-Za-z\d@$!%*?&]{7,}$'
 	# On regarde le mdp de root
 	root = ET.fromstring(xml)
-	mdp_root = root[4].text
-	#mdp_root = root.find('MDP_ROOT').text
+	# mdp_root = root[4].text
+	mdp_root = root.find('MDP_ROOT').text
 	esxiValide = re.compile(esxiReq).match(mdp_root)
 	assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
 
@@ -168,8 +168,8 @@ def validationxml(xml):
 				xml_username(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ 5 ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés." 
-			osinstall = root[1].text
-			#osinstall = root.find('OS').text
+			# osinstall = root[1].text
+			osinstall = root.find('OS').text
 			osinstall = osinstall.lower()
 			if osinstall == 'esxi':
 				try:
