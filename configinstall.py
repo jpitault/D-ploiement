@@ -485,17 +485,19 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 		fichier.write('                    <Order>9</Order> \n')
 		fichier.write('                </SynchronousCommand> \n')
 		
-		# Mettre une config réseau statique
-		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-		fichier.write('                    <CommandLine>PowerShell -Command "New-NetIPAddress –InterfaceAlias \'bond0\' –IPAddress \'{}\' –PrefixLength 24 -DefaultGateway {}"</CommandLine> \n'.format(ip, gateway))
-		fichier.write('                    <Description>Active le teaming</Description> \n')
-		fichier.write('                    <Order>10</Order> \n')
-		fichier.write('                </SynchronousCommand> \n')
-		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-		fichier.write('                    <CommandLine>PowerShell -Command "Set-DnsClientServerAddress -InterfaceAlias \'bond0\' -ServerAddresses {}"</CommandLine> \n'.format(dns))
-		fichier.write('                    <Description>Active le teaming</Description> \n')
-		fichier.write('                    <Order>11</Order> \n')
-		fichier.write('                </SynchronousCommand> \n')
+		# Mettre une config réseau statique sur le bond
+		statique = 0
+		if statique == 1:
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>PowerShell -Command "New-NetIPAddress –InterfaceAlias \'bond0\' –IPAddress \'{}\' –PrefixLength 24 -DefaultGateway {}"</CommandLine> \n'.format(ip, gateway))
+			fichier.write('                    <Description>Active le teaming</Description> \n')
+			fichier.write('                    <Order>10</Order> \n')
+			fichier.write('                </SynchronousCommand> \n')
+			fichier.write('                <SynchronousCommand wcm:action="add"> \n')
+			fichier.write('                    <CommandLine>PowerShell -Command "Set-DnsClientServerAddress -InterfaceAlias \'bond0\' -ServerAddresses {}"</CommandLine> \n'.format(dns))
+			fichier.write('                    <Description>Active le teaming</Description> \n')
+			fichier.write('                    <Order>11</Order> \n')
+			fichier.write('                </SynchronousCommand> \n')
 		
 		# Si l'option raid est présente on crée un software RAID1
 		if raid == 'raid':

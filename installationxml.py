@@ -107,7 +107,13 @@ def installxml(file):
 		#except IndexError:
 		except AttributeError:
 			scriptPs = 'PasDeScript'
-		ajouterhost.ajouterhost(mac, os, ip, nom)
+		# On peut rajouter une deuxième adresse MAC dans le xml, pour palier au choix aléatoire
+		# d'adresse MAC dans Windows pour la team.
+		try:
+			secondeMac = root.find('MACadd/MACadd2').text
+		except AttributeError:
+			secondeMac = 'PasDeMac'
+		ajouterhost.ajouterhost(mac, os, ip, nom, mac2=secondeMac)
 		fichierspxe.pxewindows(mac)
 		configinstall.winunattend(mac, nom, mdp_root, raid, prodkey, ip, scriptPs)
 	elif os == 'esxi':

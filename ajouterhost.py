@@ -4,7 +4,7 @@ import subprocess
 import re
 
 
-def ajouterhost(mac, os, ip, nom):
+def ajouterhost(mac, os, ip, nom, **kwargs):
 	file = "/etc/dhcp/"+nom
 
 	# On vérifie que l'adresse MAC en soit bien une
@@ -36,6 +36,18 @@ def ajouterhost(mac, os, ip, nom):
 		fichier.write('  fixed-address {};\n'.format(ip))
 		fichier.write('  option host-name "{}";'.format(nom))
 		fichier.write('\n}')
+		for key, value in kwargs.items():
+			if key == 'mac2':
+				fichier.write("host {}Secondaire ".format(nom))
+				fichier.write("{\n")
+				fichier.write("  hardware ethernet {};\n".format(value))
+				if os == 'openbsd':
+					fichier.write('  filename "{}/auto_install";\n'.format(os))
+				else:
+					fichier.write('  filename "{}/pxelinux.0";\n'.format(os))
+				fichier.write('  fixed-address {};\n'.format(ip))
+				fichier.write('  option host-name "{}";'.format(nom))
+				fichier.write('\n}')
 
 	# Ajoute le fichier host créer à dhcpd.conf
 	with open("/etc/dhcp/dhcpd.conf", "a") as fichier:
