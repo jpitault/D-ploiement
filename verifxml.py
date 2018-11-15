@@ -39,7 +39,12 @@ def xml_mac(xml):
 	#mac = root[0].text
 	mac = root.find('MACadd').text
 	estunemac = re.compile(X).match(mac)
-	
+	try:
+		mac2 = root.find('MACadd/MACadd2').text
+		estunemac2 = re.compile(X).match(mac2)
+		assert (estunemac2), "La seconde adresse MAC n'est pas valide"
+	except AttributeError:
+		pass
 	assert (estunemac), "Le champ 0 n'est pas une mac"
 	#print("Le champ 0 a le format d'une MAC")
 
@@ -151,23 +156,23 @@ def validationxml(xml):
 			try:
 				xml_mac(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 0 ne contient pas une MAC valide"
+				errors = errors + '\n' + "Le champ <MACadd> ne contient pas une MAC valide"
 			try:
 				xml_ip(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 2 ne contient pas une IP valide"
+				errors = errors + '\n' + "Le champ <IP> ne contient pas une IP valide"
 			try:
 				xml_os(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 1 ne contient pas le nom d'un OS supporté"
+				errors = errors + '\n' + "Le champ <OS> ne contient pas le nom d'un OS supporté"
 			try:
 				xml_nom(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 3 ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques, '_' et '-' sont autorisés. Windows nécessite moins de 15 caractères."
+				errors = errors + '\n' + "Le champ <NOM> ne contient pas un nom valide où déjà utilisé. Seul les caractères alphanumériques, '_' et '-' sont autorisés. Windows nécessite moins de 15 caractères."
 			try:
 				xml_username(xml)
 			except AssertionError:
-				errors = errors + '\n' + "Le champ 5 ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés." 
+				errors = errors + '\n' + "Le champ <NOM_USER> ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés." 
 			# osinstall = root[1].text
 			osinstall = root.find('OS').text
 			osinstall = osinstall.lower()

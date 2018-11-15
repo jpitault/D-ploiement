@@ -110,6 +110,7 @@ def installxml(file):
 		# On peut rajouter une deuxième adresse MAC dans le xml, pour palier au choix aléatoire
 		# d'adresse MAC dans Windows pour la team.
 		try:
+			#secondeMac = root[0][0].text
 			secondeMac = root.find('MACadd/MACadd2').text
 		except AttributeError:
 			secondeMac = 'PasDeMac'
