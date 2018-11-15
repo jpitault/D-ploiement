@@ -73,7 +73,7 @@ etc...
 
 ---> POST
 Attend une requête qui contient content-type = application/xml
-Puis elle utilise un script qui vérifie le contenue du xml :
+Puis elle utilise un script (verifxml.py) qui vérifie le contenu du xml :
  - 8 champs présents sous la racine
  - Les champs <MACadd> et <MACadd2> contiennent quelque chose qui a le format d'une adresse MAC, séparée par des ":", des "-" ou rien du tout. Et qu'une ressource déjà existante ne contient pas la même adresse MAC.
  - Le champ <OS> contient le nom d'un OS supporté

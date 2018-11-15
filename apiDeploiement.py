@@ -5,6 +5,7 @@ import installationxml as ix
 import suppressionhote as suph
 import xml.etree.ElementTree as ET
 import verifxml 
+import varconfig
 
 ALLOWED_FILE_TYPE = (
 	'application/xml',
