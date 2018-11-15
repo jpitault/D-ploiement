@@ -34,7 +34,14 @@ def installxml(file):
 	nom_user = root.find('NOM_USER').text
 	mdp_user = root.find('MDP_USER').text
 	taille_swap = root.find('SWAP').text
-
+	# script optionnel
+	try:
+		#scriptPs = root[1][2].text
+		scriptPs = root.find('OS/SCRIPT').text
+	#except IndexError:
+	except AttributeError:
+		scriptPs = 'PasDeScript'
+	
 	# On met le nom de l'OS en minuscules
 	os = os.lower()
 
@@ -54,33 +61,38 @@ def installxml(file):
 
 	# On crée un fichier pour le boot pxe
 	if os == 'debian':
+			
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		# On crée le fichier pxe
 		fichierspxe.pxedebian(mac)
 		# On crée le preseed
-		configinstall.debian(mac, mdp_root, nom_user, mdp_user, taille_swap)
+		configinstall.debian(mac, mdp_root, nom_user, mdp_user, taille_swap, scriptPs)
 	elif os == 'centos':
+		
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxecentos(mac)
-		configinstall.centos(mac, mdp_root, nom_user, mdp_user, taille_swap)
+		configinstall.centos(mac, mdp_root, nom_user, mdp_user, taille_swap, scriptPs)
 	elif os == 'freebsd':
+		
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxefreebsd(mac)
-		configinstall.freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user)
+		configinstall.freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user, scriptPs)
 	elif os == 'ubuntu':
+		
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxeubuntu(mac)
-		configinstall.ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap)
+		configinstall.ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap, scriptPs)
 	elif os == 'proxmox':
+		
 		os = 'debian'
 		# On crée un host pour le DHCP, 1 seul script
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxedebian(mac)
-		configinstall.proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap)
+		configinstall.proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap, scriptPs)
 	elif os == 'openbsd':
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		configinstall.openbsd(mac, nom, mdp_root, nom_user, mdp_user, taille_swap)
@@ -100,13 +112,7 @@ def installxml(file):
 		#except IndexError:
 		except AttributeError:
 			prodkey = 'WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY'
-		# il faut que le sous-élément SCRIPT existe pour que le fichier unattend exécute le script
-		try:
-			#scriptPs = root[1][2].text
-			scriptPs = root.find('OS/SCRIPT').text
-		#except IndexError:
-		except AttributeError:
-			scriptPs = 'PasDeScript'
+		
 		# On peut rajouter une deuxième adresse MAC dans le xml, pour palier au choix aléatoire
 		# d'adresse MAC dans Windows pour la team.
 		try:
@@ -118,6 +124,7 @@ def installxml(file):
 		fichierspxe.pxewindows(mac)
 		configinstall.winunattend(mac, nom, mdp_root, raid, prodkey, ip, scriptPs)
 	elif os == 'esxi':
+		
 		# On attend un sous élément à OS qui contiend la clé de licence
 		try:
 			# license_key = root[1][0].text
@@ -126,7 +133,7 @@ def installxml(file):
 			license_key = ''
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxeesxi(mac)
-		configinstall.esxi(mac, mdp_root, nom_user, mdp_user, license_key)
+		configinstall.esxi(mac, mdp_root, nom_user, mdp_user, license_key, scriptPs)
 	else:
 		print('OS non supporté. Quitte le script')
 		sys.exit()

@@ -39,6 +39,13 @@ def ajouterhost(mac, os, ip, nom, **kwargs):
 		# On écrit la seconde adresse MAC
 		for key, value in kwargs.items():
 			if key == 'mac2'  and value != 'PasDeMac':
+				# On veut une adresse MAC en majuscule, séparée par ":"
+				# On commence par séparer l'adresse MAC dans une list
+				listmac2 = re.findall('[a-fA-F0-9]{2}',value)
+				# Puis on remet en string, séparée par ":"
+				value = ":".join(listmac2)
+				# On met en majuscule
+				value = value.upper()
 				fichier.write("\nhost {}Secondaire ".format(nom))
 				fichier.write("{\n")
 				fichier.write("  hardware ethernet {};\n".format(value))

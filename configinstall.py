@@ -11,7 +11,7 @@ gateway = varconfig.ipgateway
 dns = varconfig.ipdns
 
 
-def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
+def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user, script):
 	# On vérifie que l'adresse MAC en soit bien une
 	X='([a-fA-F0-9]{2}[" ":\-]?){6}'
 	ismac = re.compile(X).match(mac)
@@ -51,12 +51,14 @@ def freebsd(mac, taille_swap, nom, mdp_root, nom_user, mdp_user):
 				out_f.write('USER="{}"\n'.format(nom_user))
 			elif 'MDPUSER="insecure"' in ligne:
 				out_f.write('MDPUSER="{}"\n'.format(mdp_user))
+			elif 'POSTINSTALL="postinstall.sh"' in ligne and script != 'PasDeScript':
+				out_f.write('POSTINSTALL="{}"'.format(script))
 			else:
 				out_f.write(ligne)
 
 
 # Ecrire le fichier preseed pour debian
-def debian(mac, mdp_root, nom_user, mdp_user, taille_swap):
+def debian(mac, mdp_root, nom_user, mdp_user, taille_swap, script):
 	# variables
 	# On veut une adresse MAC en minuscule, séparée par "-"
 	# On commence par séparer l'adresse MAC dans une list
@@ -145,11 +147,13 @@ def debian(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstall.sh http://{}/postinstall.sh; in-target /bin/sh /tmp/postinstall.sh; \\'.format(server))
 		fichier.write('\nin-target wget --output-document=/tmp/postinstallraid.sh http://{}/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh;\\'.format(server))
 		fichier.write('\nin-target wget --output-document=/tmp/bondinterfaces.sh http://{}/bondinterfaces.sh; in-target /bin/bash /tmp/bondinterfaces.sh;'.format(server))
+		if script != 'PasDeScript':
+			fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0};'.format(script, server))
 
 
 # Ecrire le kickstart avec des variables
 
-def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
+def centos(mac, mdp_root, nom_user, mdp_user, taille_swap, script):
 	# variables
 	# On veut une adresse MAC en minuscule, séparée par "-"
 	# On commence par séparer l'adresse MAC dans une list
@@ -203,6 +207,10 @@ def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('echo "Ceci est un test" > /root/test \n')
 		fichier.write('wget --output-document=/tmp/agregatcentos.sh http://{}/agregatcentos.sh \n'.format(server))
 		fichier.write('bash /tmp/agregatcentos.sh \n')
+		if script != 'PasDeScript':
+			fichier.write('wget --output-document=/tmp/{0} http://{1}/{0} \n'.format(script, server))
+			fichier.write('bash /tmp/{} \n'.format(script))
+		
 		fichier.write('grub2-install /dev/sdb \n')
 		fichier.write('%end \n')
 
@@ -210,7 +218,7 @@ def centos(mac, mdp_root, nom_user, mdp_user, taille_swap):
 
 # Ecrire preseed ubuntu avec variables
 
-def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
+def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap, script):
 
 	# variables
 	# On veut une adresse MAC en minuscule, séparée par "-"
@@ -316,15 +324,18 @@ def ubuntu(mac, mdp_root, nom_user, mdp_user, taille_swap):
 		fichier.write('d-i finish-install/reboot_in_progress note \n')
 		fichier.write('d-i preseed/late_command string in-target wget --output-document=/tmp/postinstallraid.sh http://{}/postinstallraid.sh; in-target /bin/sh /tmp/postinstallraid.sh; \\'.format(server))
 		fichier.write('\nin-target wget --output-document=/tmp/agregatubuntu.sh http://{}/agregatubuntu.sh; in-target /bin/bash /tmp/agregatubuntu.sh; '.format(server))
+		if script != 'PasDeScript':
+			fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0};'.format(script, server))
 
 		
-def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
+def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap, script):
 
 	# On prend le fichier debian
-	debian(mac, mdp_root, nom_user, mdp_user, taille_swap)
+	noScript = 'PasDeScript'
+	debian(mac, mdp_root, nom_user, mdp_user, taille_swap, noScript)
 	
 	# Et on y ajoute le script proxmox en postinstall qui est sur notre serveur web
-	script = 'proxmoxinstall.sh'
+	scriptproxmox = 'proxmoxinstall.sh'
 	
 	# variables
 	# On veut une adresse MAC en minuscule, séparée par "-"
@@ -338,8 +349,10 @@ def proxmox(mac, mdp_root, nom_user, mdp_user, taille_swap):
 	nom_preseed = '/var/www/html/' + mac + "debian.cfg"
 	
 	with open(nom_preseed,'a') as fichier:
-		fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0} ;'.format(script, server))
-		
+		fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0} ;'.format(scriptproxmox, server))
+		if script != 'PasDeScript':
+			fichier.write('\\\nin-target wget --output-document=/tmp/{0} http://{1}/{0}; in-target /bin/bash /tmp/{0};'.format(script, server))
+
 		
 # Ecrire fichier qui répond aux questions de l'installateur OpenBSD, le fichier disklabel et le set agrégat
 
@@ -644,7 +657,7 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 
 		
 # fichier kickstart pour ESXi
-def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER, LICENSE_KEY):
+def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER, LICENSE_KEY, script):
 	# On veut une adresse MAC en minuscule, séparée par "-"
 	# On commence par séparer l'adresse MAC dans une list
 	listmac = re.findall('[a-fA-F0-9]{2}',mac)
@@ -715,6 +728,10 @@ def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER, LICENSE_KEY):
 		fichier.write('#stampFile.write( time.asctime() )\n')
 		fichier.write('\n')
 		fichier.write('\n')
+		if script != 'PasDeScript':
+			fichier.write('%post --interpreter=busybox --ignorefailure=true\n')
+			fichier.write('wget --output-document=/tmp/{0} http://{1}/{0} \n'.format(script, server))
+			fichier.write('bash /tmp/{} \n'.format(script))
 		fichier.write("# On peut créer un script qui s'exécutera seulement au premier boot\n")
 		fichier.write('%firstboot --interpreter=busybox\n')
 		fichier.write('# active et démarre le service ssh\n')
