@@ -27,7 +27,7 @@ Elle fonctionne avec des fichiers .xml qui ont le format :
 ```xml
 <host>
 	<MACadd>001122334455</MACadd>
-	<OS>debian</OS>
+	<OS>debian<SCRIPT>scriptpostinstall.sh</SCRIPT></OS>
 	<IP>192.168.0.X</IP>
 	<NOM>hostname</NOM>
 	<MDP_ROOT>passwordroot</MDP_ROOT>
@@ -54,7 +54,8 @@ Il ne faut pas qu'il y ait d'espaces ou de retour à la ligne entre le nom de l'
 ```
 Il y avait un mix, où certaines fonctions ne regardait que le nom du champ et d'autres, sa position relative aux autres. 
 Normalement, toutes les fonctions ne regarde que le nom du champ désormais.
-Le SWAP est en MO.
+Le SWAP est en MO. Et le script post install est hébergé sur le serveur web. Seul OpenBSD ne supporte pas l'ajout de script à la volée, 
+il faut l'ajouter à l'archive set.
 
 Quand elle reçoit une requête POST, elle vérifie que le header content-type = application/xml.
 
