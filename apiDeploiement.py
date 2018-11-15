@@ -11,7 +11,7 @@ ALLOWED_FILE_TYPE = (
 )
 
 # Chemin ou seront stockés les ressources
-storage_path='/root/fichiersxml'
+storage_path = varconfig.cheminRessource
 if not os.path.exists(storage_path):
 	os.makedirs(storage_path)
 

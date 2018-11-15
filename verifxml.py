@@ -1,6 +1,11 @@
 import xml.etree.ElementTree as ET
 import re
 import os
+import varconfig
+
+# Où sont stockés les ressources
+storage_path = varconfig.cheminRessource
+
 
 # On vérifie déjà si le content type est xml dans la méthode post
 
@@ -35,7 +40,7 @@ def xml_mac(xml):
 	#root = tree.getroot()
 	root = ET.fromstring(xml)
 	#X='([a-fA-F0-9]{2}[:|\-]?){6}'
-	X='^([a-fA-F0-9]{2})([:|\-]?[a-fA-F0-9]{2}){5}$'
+	X='^([a-fA-F0-9]{2})([\s:|\-]?[a-fA-F0-9]{2}){5}$'
 	#mac = root[0].text
 	mac = root.find('MACadd').text
 	estunemac = re.compile(X).match(mac)
@@ -140,6 +145,41 @@ def xml_password(xml):
 	esxiValide = re.compile(esxiReq).match(mdp_root)
 	assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
 
+	
+	
+def xml_macduplicate(xml):
+	root = ET.fromstring(xml)
+	#mac = root[0].text
+	mac = root.find('MACadd').text
+	# On compare les adresses MAC sans séparateurs et en minuscules
+	lmac = re.findall('[a-fA-F0-9]{2}',mac)
+	mac = ''.join(lmac)
+	mac = mac.lower()
+	
+	list = os.listdir(storage_path)
+	list_mac = []
+	for ressource in list:
+		f_xml = os.path(storage_path, ressource)
+		f_tree = ET.parse(f_xml)
+		f_root = f_tree.getroot()
+		f_mac = f_root.find('MACadd').text
+		f_lmac = re.findall('[a-fA-F0-9]{2}',f_mac)
+		f_mac = ''.join(f_lmac)
+		f_mac = f_mac.lower()
+		list_mac.append(f_mac)
+		
+	try:
+		mac2 = root.find('MACadd/MACadd2').text
+		lmac2 = re.findall('[a-fA-F0-9]{2}',mac2)
+		mac2 = ''.join(lmac2)
+		mac2 = mac2.lower()
+		assert not (mac2 in list_mac)
+	except AttributeError:
+		pass
+		
+	assert not (mac in list_mac)
+		
+		
 # On rassemble le tout
 def validationxml(xml):
 	errors = ''
@@ -173,6 +213,11 @@ def validationxml(xml):
 				xml_username(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ <NOM_USER> ne contient pas un nom valide. Seul les caractères alphanumériques, '_' et '-' sont autorisés." 
+			try:
+				xml_macduplicate(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ <MACadd> ou <MACadd2> contient une adresse MAC déjà utilisé par une autre ressource."
+
 			# osinstall = root[1].text
 			osinstall = root.find('OS').text
 			osinstall = osinstall.lower()
