@@ -30,8 +30,12 @@ Le fichier xml doit correspondre au modèle
 def xml_taille(xml):
 	#tree = ET.parse(xml)
 	#root = tree.getroot()
-	root = ET.fromstring(xml)
-	assert (len(list(root)) == 8), "Le fichier doit comprendre 8 champs"
+	try:
+		root = ET.fromstring(xml)
+		assert (len(list(root)) == 8), "Le fichier doit comprendre 8 champs"
+	except ET.ParseError:
+		assert False
+	
 
 	
 # On veut vérifier que le champ [0] est bien une adresse MAC
@@ -42,8 +46,11 @@ def xml_mac(xml):
 	#X='([a-fA-F0-9]{2}[:|\-]?){6}'
 	X='^([a-fA-F0-9]{2})([\s:|\-]?[a-fA-F0-9]{2}){5}$'
 	#mac = root[0].text
-	mac = root.find('MACadd').text
-	estunemac = re.compile(X).match(mac)
+	try:
+		mac = root.find('MACadd').text
+		estunemac = re.compile(X).match(mac)
+	except AttributeError:
+		estunemac = False
 	try:
 		mac2 = root.find('MACadd/MACadd2').text
 		estunemac2 = re.compile(X).match(mac2)
@@ -64,8 +71,11 @@ def xml_ip(xml):
 	ValidIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 	ipRFC1918 = '^(((^127\.)|(^10\.))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.|(^192\.168\.)|((^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)))(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
 	# ip = root[2].text
-	ip = root.find('IP').text
-	estuneip = re.compile(ipRFC1918).match(ip)
+	try:
+		ip = root.find('IP').text
+		estuneip = re.compile(ipRFC1918).match(ip)
+	except AttributeError:
+		estuneip = False
 	assert (estuneip), "Le champ 2 n'est pas une IP"
 
 	
@@ -76,8 +86,11 @@ def xml_os(xml):
 	root = ET.fromstring(xml)
 	osSupport = ['debian','ubuntu','centos','proxmox','freebsd','openbsd','windows','esxi']
 	# osinstall = root[1].text
-	osinstall = root.find('OS').text
-	osinstall = osinstall.lower()
+	try:
+		osinstall = root.find('OS').text
+		osinstall = osinstall.lower()
+	except AttributeError:
+		osinstall = 'rien'
 	# containOs = 0
 	# for o in osSupport:
 		# if o in osinstall:
@@ -90,35 +103,40 @@ def xml_os(xml):
 def xml_nom(xml):
 	# On ne veut pas d'espaces dans le nom qui servira de hostname
 	root = ET.fromstring(xml)
-	# nom = root[3].text
-	nom = root.find('NOM').text
-	# Windows n'accepte pas les noms de plus de 15 caractères
-	if root.find('OS').text.lower() == 'windows':
-		X = '^[a-zA-Z0-9_-]{1,15}$'
-	else:
-		X = '^[a-zA-Z0-9_:-]+$'
-	nomvalide = re.compile(X).match(nom)
-	assert (nomvalide)
-	"""FACON ALAMBIQUE
-	X = '[^a-zA-Z0-9_:-]'
-	assert not (re.search(X, nom))
-	"""
-	# On ne veut pas que le nom soit déjà utilisé non plus
-	list = os.listdir(path='/etc/dhcp')
-	assert not (nom in list)
-	
+	try:
+		# nom = root[3].text
+		nom = root.find('NOM').text
+		# Windows n'accepte pas les noms de plus de 15 caractères
+		if root.find('OS').text.lower() == 'windows':
+			X = '^[a-zA-Z0-9_-]{1,15}$'
+		else:
+			X = '^[a-zA-Z0-9_:-]+$'
+		nomvalide = re.compile(X).match(nom)
+		assert (nomvalide)
+		"""FACON ALAMBIQUE
+		X = '[^a-zA-Z0-9_:-]'
+		assert not (re.search(X, nom))
+		"""
+		# On ne veut pas que le nom soit déjà utilisé non plus
+		list = os.listdir(path='/etc/dhcp')
+		assert not (nom in list)
+	except AttributeError:
+		assert False
 	
 
 # Check sur le champ username	
 def xml_username(xml):
 	# On veut pas d'espaces dans le nom d'utilisateur
 	root = ET.fromstring(xml)
-	# username = root[5].text
-	username = root.find('NOM_USER').text
-	X = '^[a-zA-Z0-9_:-]+$'
-	usernameValide = re.compile(X).match(username)
-	assert (usernameValide)
-	
+	try:
+		# username = root[5].text
+		username = root.find('NOM_USER').text
+		X = '^[a-zA-Z0-9_:-]+$'
+		usernameValide = re.compile(X).match(username)
+		assert (usernameValide)
+	except AttributeError:
+		assert False
+		
 	
 	
 """
@@ -140,44 +158,65 @@ def xml_password(xml):
 	esxiReq = '^(^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*#?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*\d)|(?!^([A-Z])[a-z\d@$!%*#?&]{7,}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*#?&])|^(?!\D+\d$)(?!^([A-Z])[a-z\d@$!%*#?&]{7,}$)(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])|^(?!\D+\d$)(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&]))[A-Za-z\d@$!%*#?&]{7,}$'
 	# On regarde le mdp de root
 	root = ET.fromstring(xml)
-	# mdp_root = root[4].text
-	mdp_root = root.find('MDP_ROOT').text
-	esxiValide = re.compile(esxiReq).match(mdp_root)
-	assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
+	try:
+		# mdp_root = root[4].text
+		mdp_root = root.find('MDP_ROOT').text
+		esxiValide = re.compile(esxiReq).match(mdp_root)
+		assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
+	except AttributeError:
+		assert False
 
 	
 	
 def xml_macduplicate(xml):
 	root = ET.fromstring(xml)
-	#mac = root[0].text
-	mac = root.find('MACadd').text
-	# On compare les adresses MAC sans séparateurs et en minuscules
-	lmac = re.findall('[a-fA-F0-9]{2}',mac)
-	mac = ''.join(lmac)
-	mac = mac.lower()
-	
-	list = os.listdir(storage_path)
-	list_mac = []
-	for ressource in list:
-		f_xml = os.path(storage_path, ressource)
-		f_tree = ET.parse(f_xml)
-		f_root = f_tree.getroot()
-		f_mac = f_root.find('MACadd').text
-		f_lmac = re.findall('[a-fA-F0-9]{2}',f_mac)
-		f_mac = ''.join(f_lmac)
-		f_mac = f_mac.lower()
-		list_mac.append(f_mac)
-		
 	try:
-		mac2 = root.find('MACadd/MACadd2').text
-		lmac2 = re.findall('[a-fA-F0-9]{2}',mac2)
-		mac2 = ''.join(lmac2)
-		mac2 = mac2.lower()
-		assert not (mac2 in list_mac)
-	except AttributeError:
-		pass
+		#mac = root[0].text
+		mac = root.find('MACadd').text
+		# On compare les adresses MAC sans séparateurs et en minuscules
+		lmac = re.findall('[a-fA-F0-9]{2}',mac)
+		mac = ''.join(lmac)
+		mac = mac.lower()
 		
-	assert not (mac in list_mac)
+		list = os.listdir(storage_path)
+		list_mac = []
+		for ressource in list:
+			f_xml = os.path.join(storage_path, ressource)
+			f_tree = ET.parse(f_xml)
+			f_root = f_tree.getroot()
+			f_mac = f_root.find('MACadd').text
+			f_lmac = re.findall('[a-fA-F0-9]{2}',f_mac)
+			f_mac = ''.join(f_lmac)
+			f_mac = f_mac.lower()
+			list_mac.append(f_mac)
+			
+		try:
+			mac2 = root.find('MACadd/MACadd2').text
+			lmac2 = re.findall('[a-fA-F0-9]{2}',mac2)
+			mac2 = ''.join(lmac2)
+			mac2 = mac2.lower()
+			assert not (mac2 in list_mac)
+		except AttributeError:
+			pass
+			
+		assert not (mac in list_mac)
+	except AttributeError:
+		assert False
+	
+def xml_ipduplicate(xml):
+	root= ET.fromstring(xml)
+	try:
+		ip = root.find('IP').text
+		list = os.listdir(storage_path)
+		list_ip = []
+		for ressource in list:
+			f_xml = os.path.join(storage_path, ressource)
+			f_tree = ET.parse(f_xml)
+			f_root = f_tree.getroot()
+			f_ip = f_root.find('IP').text
+			list_ip.append(f_ip)
+	except AttributeError:
+		assert False
 		
 		
 # On rassemble le tout
