@@ -131,21 +131,21 @@ c'est le script verifxml.py qui s'en charge.
 
 Scripts nécessaires pour l'ajout d'un host :
  - installationxml : prend un fichier xml et lance les scripts :
-   - ajouterhost : s'occupe de la configuration du DHCP
-   - fichierspxe : s'occupe de la configuration du PXE (fichier dans le serveur tftp)
-   - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml
+   - ajouterhost : s'occupe de la configuration du DHCP. Crée un fichier qui assigne nom et ip à une MAC.
+   - fichierspxe : s'occupe de la configuration du PXE (fichier dans le serveur tftp). Crée un fichier avec les options de boot pour PXE.
+   - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml. C'est à dire preseed, kickstart etc...
 
 Ils assument :
  - Que la conf du DHCP se trouve dans le dossier /etc/dhcp
  - Le serveur TFTP a pour racine /srv/tftp/ et qu'il utilise ensuite un dossier pour chaque OS
- - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle
+ - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle. Elle contient la configuration de l'agrégat de liens. On peut y ajouter un script postinstall.
  
 Le script bsdinstallzfs.txt est utilisé comme modèle par configinstall lors de la création des fichiers d'installation de freebsd.
 
 
 ### Pour la suppresion d'une ressource
 
-suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'installation.
+suppressionhote.py supprime les fichiers DHCP, PXE et de configuration d'installation. Il est appelé sur une requête delete. 
 
 ### Variable à changer
 
