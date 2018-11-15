@@ -39,7 +39,7 @@ def ajouterhost(mac, os, ip, nom, **kwargs):
 		# On écrit la seconde adresse MAC
 		for key, value in kwargs.items():
 			if key == 'mac2'  and value != 'PasDeMac':
-				fichier.write("host {}Secondaire ".format(nom))
+				fichier.write("\nhost {}Secondaire ".format(nom))
 				fichier.write("{\n")
 				fichier.write("  hardware ethernet {};\n".format(value))
 				if os == 'openbsd':
