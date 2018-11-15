@@ -215,6 +215,7 @@ def xml_ipduplicate(xml):
 			f_root = f_tree.getroot()
 			f_ip = f_root.find('IP').text
 			list_ip.append(f_ip)
+		assert not (ip in list_ip)
 	except AttributeError:
 		assert False
 		
