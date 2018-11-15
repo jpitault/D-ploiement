@@ -256,6 +256,10 @@ def validationxml(xml):
 				xml_macduplicate(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ <MACadd> ou <MACadd2> contient une adresse MAC déjà utilisé par une autre ressource."
+			try:
+				xml_ipduplicate(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ <IP> contient une adresse IP déjà utilisé par une autre ressource."
 
 			# osinstall = root[1].text
 			osinstall = root.find('OS').text
