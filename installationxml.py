@@ -129,7 +129,8 @@ def installxml(file):
 		try:
 			# license_key = root[1][0].text
 			license_key = root.find('OS/PRODUCTKEY').text
-		except IndexError:
+		#except IndexError:
+		except AttributeError:
 			license_key = ''
 		ajouterhost.ajouterhost(mac, os, ip, nom)
 		fichierspxe.pxeesxi(mac)
