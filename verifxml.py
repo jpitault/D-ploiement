@@ -109,9 +109,9 @@ def xml_nom(xml):
 		nom = root.find('NOM').text
 		# Windows n'accepte pas les noms de plus de 15 caractères
 		if root.find('OS').text.lower() == 'windows':
-			X = '^[a-zA-Z0-9_-]{1,15}$'
+			X = '^[a-zA-Z0-9][-a-zA-Z0-9_]{1,14}$'
 		else:
-			X = '^[a-zA-Z0-9-]+$'
+			X = '^[a-zA-Z0-9][-a-zA-Z0-9]{1,31}$'
 		nomvalide = re.compile(X).match(nom)
 		assert (nomvalide)
 		"""FACON ALAMBIQUE
