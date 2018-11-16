@@ -1,10 +1,10 @@
 <host>
-	<MACadd>080027777779</MACadd>
-	<OS>esxi</OS>
-	<IP>192.167.0.92</IP>
-	<NOM>TestMDP</NOM>
-	<MDP_ROOT>password</MDP_ROOT>
-	<NOM_USER>julian</NOM_USER>
-	<MDP_USER>password</MDP_USER>
+	<MACadd>080027777888</MACadd>
+	<OS>esxi<SCRIPT>postinstall.ps1</SCRIPT><RAID>raid</RAID></OS>
+	<IP>192.168.0.15</IP>
+	<NOM>ESXiServ</NOM>
+	<MDP_ROOT>password1$</MDP_ROOT>
+	<NOM_USER>castle</NOM_USER>
+	<MDP_USER>password2$</MDP_USER>
 	<SWAP>1024</SWAP>
 </host>

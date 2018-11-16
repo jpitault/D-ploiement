@@ -62,5 +62,6 @@ def ajouterhost(mac, os, ip, nom, **kwargs):
 			fichier.write('include "{}";\n'.format(file))
 
 	# Redémarre le service DHCP
-	subprocess.run(["systemctl", "restart", "isc-dhcp-server.service"])
+	#subprocess.run(["systemctl", "restart", "isc-dhcp-server.service"])
+	subprocess.run(["systemctl", "force-reload", "isc-dhcp-server.service"])
 

@@ -493,7 +493,9 @@ def winunattend(mac, computername, mdp_admin, raid, productkey, ip, script):
 		fichier.write('        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> \n')
 		fichier.write('            <FirstLogonCommands> \n')
 		fichier.write('                <SynchronousCommand wcm:action="add"> \n')
-		fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name \'bond0\' -TeamMembers \'Ethernet\',\'Ethernet 2\' -TeamingMode SwitchIndependent -LoadBalancingAlgorithm TransportPorts -Confirm:$false"</CommandLine> \n')
+		# teaming des cartes
+		#fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name \'bond0\' -TeamMembers \'Ethernet\',\'Ethernet 2\' -TeamingMode SwitchIndependent -LoadBalancingAlgorithm TransportPorts -Confirm:$false"</CommandLine> \n')
+		fichier.write('                    <CommandLine>PowerShell -Command "New-NetLbfoTeam -Name \'bond0\' -TeamMembers \'Ethernet\',\'Ethernet 2\' -TeamingMode LACP -LoadBalancingAlgorithm Dynamic -Confirm:$false"</CommandLine> \n')
 		fichier.write('                    <Description>Active le teaming</Description> \n')
 		fichier.write('                    <Order>9</Order> \n')
 		fichier.write('                </SynchronousCommand> \n')

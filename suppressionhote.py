@@ -49,7 +49,8 @@ def menagedhcp(mac, nom, osinstall):
 				fichier.write(ligne)
 				
 	# On redémarre le service
-	subprocess.run(["systemctl", "restart", "isc-dhcp-server.service"])
+	#subprocess.run(["systemctl", "restart", "isc-dhcp-server.service"])
+	subprocess.run(["systemctl", "force-reload", "isc-dhcp-server.service"])
 
 
 # Supprimer le fichier PXE
