@@ -163,6 +163,10 @@ def xml_password(xml):
 		mdp_root = root.find('MDP_ROOT').text
 		esxiValide = re.compile(esxiReq).match(mdp_root)
 		assert (esxiValide), "Le mot de passe ne répond pas aux exigences d'ESXi"
+		mdp_user = root.find('MDP_USER').text
+		esxiValideU = re.compile(esxiReq).match(mdp_user)
+		assert (esxiValideU), "Le mot de passe ne répond pas aux exigences d'ESXi"
+		
 	except AttributeError:
 		assert False
 
