@@ -5,7 +5,8 @@ import varconfig
 
 # Où sont stockés les ressources
 storage_path = varconfig.cheminRessource
-
+# Où sont stockés les scripts
+dossier_script = '/var/www/html/'
 
 # On vérifie déjà si le content type est xml dans la méthode post
 
@@ -231,6 +232,18 @@ def xml_swap(xml):
 		X = '^\d{2,4}$'
 		swapvalide = re.compile(X).match(swap)
 		assert swapvalide
+	except AttributeError:
+		assert False
+
+
+# On peut vérifier si le script est sur le serveur web. Mais c'est pas terrible comme idée je trouve
+# Donc pas utilisé.		
+def  xml_script(xml):
+	root = ET.fromstring(xml)
+	try:
+		script = root.find('OS/SCRIPT').text
+		list = os.listdir(dossier_script)
+		assert (script in list)
 	except AttributeError:
 		assert False
 		
