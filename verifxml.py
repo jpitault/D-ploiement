@@ -280,14 +280,17 @@ def validationxml(xml):
 			except AssertionError:
 				errors = errors + '\n' + "Le champ <SWAP> ne contient pas un nombre compris entre 10 et 9999."
 				
-			# osinstall = root[1].text
-			osinstall = root.find('OS').text
-			osinstall = osinstall.lower()
-			if osinstall == 'esxi':
-				try:
-					xml_password(xml)
-				except AssertionError:
-					errors = errors + '\n' + "Le mot de passe root ne répond pas aux exigences d'ESXi"
+			try:
+				# osinstall = root[1].text
+				osinstall = root.find('OS').text
+				osinstall = osinstall.lower()
+				if osinstall == 'esxi':
+					try:
+						xml_password(xml)
+					except AssertionError:
+						errors = errors + '\n' + "Le mot de passe root ne répond pas aux exigences d'ESXi"
+			except AttributeError:
+				pass
 	
 	return errors
 

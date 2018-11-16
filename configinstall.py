@@ -733,6 +733,7 @@ def esxi(mac, MDP_ROOT, NOM_USER, MDP_USER, LICENSE_KEY, script):
 			fichier.write('wget -O /tmp/{0} http://{1}/{0} \n'.format(script, server))
 			# ESXi n'a pas le binaire bash
 			fichier.write('sh /tmp/{} \n'.format(script))
+			fichier.write('sleep 30')
 		fichier.write("# On peut créer un script qui s'exécutera seulement au premier boot\n")
 		fichier.write('%firstboot --interpreter=busybox\n')
 		fichier.write('# active et démarre le service ssh\n')
