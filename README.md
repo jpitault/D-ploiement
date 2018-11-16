@@ -137,12 +137,15 @@ Scripts nécessaires pour l'ajout d'un host :
    - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml. C'est à dire preseed, kickstart etc... Une fonction par OS
 
 Ils assument :
- - Que la conf du DHCP se trouve dans le dossier /etc/dhcp
- - Le serveur TFTP a pour racine /srv/tftp/ et qu'il utilise ensuite un dossier pour chaque OS
- - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle. Elle contient la configuration de l'agrégat de liens. On peut y ajouter un script postinstall.
+ - Que la conf du DHCP se trouve dans le dossier /etc/dhcp, avec le fichier dhcpd.conf (serveur isc-dhcp-server sur debian).
+ - Le serveur TFTP a pour racine /srv/tftp/ et qu'il utilise ensuite un dossier pour chaque OS. Chaque dossier contient le kernel/image nécéssaire pour l'installation pxe de la version et un dossier pxelinux.cfg. 
+ - Pour OpenBSD, il existe une archive .tgz appellé site62.tgz qui sert de modèle. Elle contient la configuration de l'agrégat de liens. 
+ On peut y ajouter un script postinstall. De plus OpenBSD nécessite d'héberger sur le serveur même les sets de base, avec la même arborescence. 
+ Exemple : https://ftp.fr.openbsd.org/pub/OpenBSD/6.3/amd64/
  
-Le script bsdinstallzfs.txt est utilisé comme modèle par configinstall lors de la création des fichiers d'installation de freebsd.
+Le script bsdinstallzfs.txt est utilisé comme modèle par configinstall.py lors de la création des fichiers d'installation de freebsd.
 
+varconfig.py contient des variables locales.
 
 ### Pour la suppresion d'une ressource
 
