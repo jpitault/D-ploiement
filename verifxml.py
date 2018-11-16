@@ -132,7 +132,7 @@ def xml_username(xml):
 	try:
 		# username = root[5].text
 		username = root.find('NOM_USER').text
-		X = '^[-a-zA-Z0-9]+$'
+		X = '^[a-zA-Z0-9][-a-zA-Z0-9]+$'
 		usernameValide = re.compile(X).match(username)
 		assert (usernameValide)
 	except AttributeError:
