@@ -131,10 +131,10 @@ c'est le script verifxml.py qui s'en charge.
 ### Pour une installation
 
 Scripts nécessaires pour l'ajout d'un host :
- - installationxml : prend un fichier xml et lance les scripts :
-   - ajouterhost : s'occupe de la configuration du DHCP. Crée un fichier qui assigne nom et ip à une MAC.
-   - fichierspxe : s'occupe de la configuration du PXE (fichier dans le serveur tftp). Crée un fichier avec les options de boot pour PXE.
-   - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml. C'est à dire preseed, kickstart etc...
+ - installationxml : prend un fichier xml, regarde l'OS et lance les scripts :
+   - ajouterhost : s'occupe de la configuration du DHCP. Crée un fichier qui assigne nom et ip à une MAC. Même fonction pour tous les OS.
+   - fichierspxe : s'occupe de la configuration du PXE (fichier dans le serveur tftp). Crée un fichier avec les options de boot pour PXE. Une fonction par OS.
+   - configinstall : s'occupe de la création des fichiers requis pour ou pendant l'installation, avec les paramètres du .xml. C'est à dire preseed, kickstart etc... Une fonction par OS
 
 Ils assument :
  - Que la conf du DHCP se trouve dans le dossier /etc/dhcp
