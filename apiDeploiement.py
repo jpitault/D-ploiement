@@ -74,7 +74,7 @@ class Hosts(object):
 			resp.status = falcon.HTTP_201
 			# On lui donne un nom unique
 			name = '{uuid}'.format(uuid=uuid.uuid4())
-			# On définit le chemin où le contenue sera sauvegardé
+			# On définit le chemin où le contenu sera sauvegardé
 			res_path = os.path.join(self._storage_path, name)
 			# On écrit le fichier sur le serveur
 			with open(res_path, 'w') as fichier:
@@ -138,7 +138,8 @@ class UsedIP(object):
 			nom = root.find("NOM").text
 			#ip = root[2].text
 			ip = root.find("IP").text
-			tempbody = tempbody + nom + '	:	' + ip + '\n'
+			#tempbody = tempbody + nom + '	:	' + ip + '\n'
+			tempbody = tempbody + '{:<20} :  {}\n'.format(nom, ip)
 		resp.body = tempbody
 		resp.content_type = falcon.MEDIA_TEXT
 
