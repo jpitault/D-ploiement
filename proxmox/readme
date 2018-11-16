@@ -1,2 +1,0 @@
-Pour installer proxmox, on installe un debian et on rajoute un script postinstall
-au preseed qui installe proxmox

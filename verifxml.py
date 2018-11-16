@@ -101,7 +101,7 @@ def xml_os(xml):
 
 
 def xml_nom(xml):
-	# On ne veut pas d'espaces dans le nom qui servira de hostname
+	# On ne veut pas d'espaces dans le nom qui servira de hostname ni de "_" et ":"
 	root = ET.fromstring(xml)
 	try:
 		# nom = root[3].text
@@ -110,7 +110,7 @@ def xml_nom(xml):
 		if root.find('OS').text.lower() == 'windows':
 			X = '^[a-zA-Z0-9_-]{1,15}$'
 		else:
-			X = '^[a-zA-Z0-9_:-]+$'
+			X = '^[a-zA-Z0-9-]+$'
 		nomvalide = re.compile(X).match(nom)
 		assert (nomvalide)
 		"""FACON ALAMBIQUE
@@ -219,6 +219,16 @@ def xml_ipduplicate(xml):
 	except AttributeError:
 		assert False
 		
+
+def xml_swap(xml):
+	root = ET.fromstring(xml)
+	try:
+		swap = root.find('SWAP').text
+		X = '^\d{2,4}$'
+		swapvalide = re.compile(X).match(swap)
+		assert swapvalide
+	except AttributeError:
+		assert False
 		
 # On rassemble le tout
 def validationxml(xml):
@@ -261,7 +271,11 @@ def validationxml(xml):
 				xml_ipduplicate(xml)
 			except AssertionError:
 				errors = errors + '\n' + "Le champ <IP> contient une adresse IP déjà utilisé par une autre ressource."
-
+			try:
+				xml_swap(xml)
+			except AssertionError:
+				errors = errors + '\n' + "Le champ <SWAP> ne contient pas un nombre compris entre 10 et 9999."
+				
 			# osinstall = root[1].text
 			osinstall = root.find('OS').text
 			osinstall = osinstall.lower()
