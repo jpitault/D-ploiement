@@ -81,7 +81,7 @@ Puis elle utilise un script (verifxml.py) qui vérifie le contenu du xml :
  - Le champ IP contient une adresse IP locale (RFC1918)
  - Le champ NOM contient un nom dans lequel il n'y a que des caractères acceptés (alphanumériques et "-"). Et pour Windows si le nom contient moins de 15 caractères. Vérifie aussi si le nom n'est pas déjà utilisé par le DHCP.
  - Si on essaie d'installer ESXi, que le cinquième MDP_ROOT contient un mot de passe qui vérifie les demandes d'ESXi.
- - Le sixième champ <NOM_USER>contient un nom d'utilisateur, fait de caractères alphanumériques et sans espaces.
+ - Le sixième champ NOM_USER contient un nom d'utilisateur, fait de caractères alphanumériques et sans espaces.
 
 
 Elle renvoie une erreur 415 si une de ces conditions n'est pas respecté.
