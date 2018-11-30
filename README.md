@@ -76,11 +76,11 @@ etc...
 Attend une requête qui contient content-type = application/xml
 Puis elle utilise un script (verifxml.py) qui vérifie le contenu du xml :
  - 8 champs présents sous la racine
- - Les champs <MACadd> et <MACadd2> contiennent quelque chose qui a le format d'une adresse MAC, séparée par des ":", des "-" ou rien du tout. Et qu'une ressource déjà existante ne contient pas la même adresse MAC.
- - Le champ <OS> contient le nom d'un OS supporté
- - Le champ <IP> contient une adresse IP locale (RFC1918)
- - Le champ <NOM> contient un nom dans lequel il n'y a que des caractères acceptés (alphanumériques et "-"). Et pour Windows si le nom contient moins de 15 caractères. Vérifie aussi si le nom n'est pas déjà utilisé par le DHCP.
- - Si on essaie d'installer ESXi, que le cinquième <MDP_ROOT> contient un mot de passe qui vérifie les demandes d'ESXi.
+ - Les champs MACadd et MACadd2 contiennent quelque chose qui a le format d'une adresse MAC, séparée par des ":", des "-" ou rien du tout. Et qu'une ressource déjà existante ne contient pas la même adresse MAC.
+ - Le champ OS contient le nom d'un OS supporté
+ - Le champ IP contient une adresse IP locale (RFC1918)
+ - Le champ NOM contient un nom dans lequel il n'y a que des caractères acceptés (alphanumériques et "-"). Et pour Windows si le nom contient moins de 15 caractères. Vérifie aussi si le nom n'est pas déjà utilisé par le DHCP.
+ - Si on essaie d'installer ESXi, que le cinquième MDP_ROOT contient un mot de passe qui vérifie les demandes d'ESXi.
  - Le sixième champ <NOM_USER>contient un nom d'utilisateur, fait de caractères alphanumériques et sans espaces.
 
 
